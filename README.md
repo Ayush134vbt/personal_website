@@ -1,19 +1,20 @@
 # Ayush Prasad — Personal Portfolio
 
-A simple, responsive two-section portfolio website built with plain HTML, CSS and a small amount of JavaScript. Interactive but light — no frameworks, no build step.
+A responsive two-section portfolio website built with plain HTML, CSS and JavaScript, with a few small canvas games and animations. No frameworks, no build step.
 
 ## What's included
 
-- **Home:** eyebrow, portrait, data-science intro, primary CTA, email + LinkedIn contact chips, and the full skills toolkit/
-- **Projects:** Bike Sharing Demand Analysis and E-commerce SQL Analysis, each linking to GitHub.
+- **Home:** a rock-skipping game, eyebrow, portrait with a stick figure writing the photo credit, a small dino-runner game, data-science intro, primary CTA, email + LinkedIn contact chips, and the full skills toolkit.
+- **Projects:** Bike Sharing Demand Analysis and E-commerce SQL Analysis, each with a short results-focused summary based on its repository README and a link to GitHub.
 - **Responsive layout:** desktop and mobile navigation and layouts.
 - **Neo-brutalist meets retro-surreal:** chunky hard shadows, bold ink borders, rounded squares, and vibrant pastel blocks.
-- **Original artwork:** custom SVG scenes drawn in the same palette.
-  - Hero landscape: swirling white cloud spirals, a pale moon, a colourful building skyline, lavender meadow with wildflowers, and a tiny Sisyphus pushing his boulder.
-  - Hero portrait: rounded-square, yellow-framed photo on the left of the hero, with a coral drop shadow and "AYUSH, IRL" sticker tag.
-  - Projects illustration 1: a winding demand curve over a sun and horizon, flanked by yellow and aqua bar charts, with a central donut chart and "PEAK HOUR" callout.
-  - Projects illustration 2: abstract floating data shapes with connected dots.
-- **Contact chips:** email and LinkedIn as neo-brutalist buttons with icon squares and chunky shadows.
+- **Artwork:**
+  - Hero image: a painted scene of colourful buildings under a swirling spiral cloud (`buildings-clouds.jpg`).
+  - Hero portrait: rounded-square photo with a coral drop shadow and "AYUSH, IRL" sticker tag.
+  - Project illustrations: custom SVGs for the bike-demand chart and the linked SQL tables.
+- **Rock-skipping game (canvas):** a hand-drawn, pen-and-ink scene in the style of a newspaper cartoon, set in a dusty, WALL-E-like wasteland with a small orange robot who throws stones across a murky lake. Click or press Space to throw; it skips 1–10 times, shows a result bubble and remembers your best score in `localStorage`. The lettering uses the Patrick Hand font.
+- **Stick figure writer (canvas):** a small stick figure walks along and writes "Photo taken by Anjola" next to the portrait, then waves. Hover to replay.
+- **Dino runner (canvas):** a small endless-runner game; press Space, Up Arrow or tap to jump.
 - **Interactive layer:**
   - Custom follow cursor with hover growth on interactive elements.
   - Scroll-triggered reveals for the hero copy, skills, and project cards.
@@ -21,21 +22,22 @@ A simple, responsive two-section portfolio website built with plain HTML, CSS an
   - Chip, button and card hover: translate up-left with a growing drop shadow.
   - Magnetic effect on the primary CTA, the GitHub pill in the nav, and the GitHub footer link.
   - Active-section highlighting on the nav links as you scroll.
-  - Reduced-motion and touch devices are respected — the custom cursor and tilt are automatically disabled.
+  - Reduced-motion and touch devices are respected: the custom cursor, tilt and canvas animations are automatically toned down or disabled.
 
 ## Folder structure
 
 ```text
-ayush_website/
+personal_website/
 ├── index.html
 ├── styles.css
 ├── script.js
 ├── README.md
 └── assets/
-    ├── hero-landscape.svg
+    ├── ayush.jpg
+    ├── ayush-name.jpg
+    ├── buildings-clouds.jpg
     ├── bike-illustration.svg
     ├── sql-illustration.svg
-    ├── ayush.jpg
     └── favicon.svg
 ```
 
@@ -45,13 +47,13 @@ ayush_website/
 2. **A web browser** — Chrome, Safari or Firefox to view the website.
 3. **Optional: Live Server extension for VS Code** — gives you a local preview that refreshes as you save changes. You do not need Node.js, npm, React, Astro or a database for this version.
 
-The site uses Google Fonts (Syne, DM Sans and Fraunces). An internet connection is needed to load those fonts. If unavailable, fallback fonts will be used.
+The site uses Google Fonts (Syne, DM Sans, Fraunces and Patrick Hand). An internet connection is needed to load those fonts. If unavailable, fallback fonts will be used.
 
 ## Open the website
 
 1. Download and unzip the project folder.
 2. Open VS Code.
-3. Select **File → Open Folder…** and choose `ayush_website`.
+3. Select **File → Open Folder…** and choose the project folder.
 4. Open `index.html` in your browser, or right-click it in VS Code and choose **Open with Live Server** if you have that optional extension installed.
 
 No install command or build step is required.
@@ -76,6 +78,7 @@ Your GitHub profile link is also in `index.html` and can be changed by searching
 - **Colours and visual styling:** edit the CSS variables at the top of `styles.css`.
 - **Interaction speed and feel:** tweak the values at the top of `script.js` (tilt strength, magnetic strength, reveal threshold).
 - **Illustrations:** replace the SVG files in `assets/` with your own artwork, keeping the same filenames, or update the image paths in `index.html`.
+- **Games and animations:** the rock-skipping scene and the stick-figure writer are drawn in `script.js` (look for `Rock skipping` and `Stick figure writing`). Colours, text and speeds are constants at the top of each block.
 
 ## Publish with Cloudflare Pages later
 
