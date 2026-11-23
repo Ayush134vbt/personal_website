@@ -302,9 +302,9 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 /* ---------- Portrait row: photo + speech bubble + game ---------- */
 .portrait-row { display: flex; flex-wrap: wrap; align-items: center; gap: 30px clamp(24px, 3vw, 40px); width: 100%; }
 .portrait-side { flex: 1 1 200px; min-width: 0; max-width: 400px; display: flex; flex-direction: column; align-items: stretch; }
-.writer { position: absolute; z-index: 4; left: calc(100% + 14px); bottom: 6px; width: 240px; height: 74px; }
-.writer canvas { display: block; width: 100%; height: 100%; }
-@media (max-width: 700px) { .portrait-side { flex-basis: 100%; max-width: none; } .writer { left: auto; right: -30px; bottom: -40px; } }
+.writer { position: absolute; z-index: 4; left: calc(100% + 14px); bottom: 6px; }
+.writer canvas { display: block; }
+@media (max-width: 700px) { .portrait-side { flex-basis: 100%; max-width: none; } .writer { left: calc(100% + 8px); top: -4px; bottom: auto; } }
 
 /* ---------- Rock skipping game ---------- */
 .skip-game { max-width: 560px; }
