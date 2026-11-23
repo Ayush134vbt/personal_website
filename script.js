@@ -901,3 +901,82 @@ if (artWrap && artImg) {
   }
   document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
 })();
+
+
+// ===== Stick figure writing the photo credit =====
+(() => {
+  const canvas = document.querySelector('#writer-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W * dpr; canvas.height = H * dpr; ctx.scale(dpr, dpr);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+  const INK = '#191526', YELLOW = '#ffe93a';
+  const TEXT = 'Photo taken by Anjola', X0 = 8, TY = 17, WRITE_MS = 2800;
+  const FONT = '600 21px "Patrick Hand", "Comic Sans MS", cursive';
+  const reduce = prefersReducedMotion;
+  let textW = 160, t0 = 0, raf = 0, visible = false;
+
+  const line = (pts, w = 2.2) => {
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.strokeStyle = INK; ctx.lineWidth = w; ctx.stroke();
+  };
+
+  const draw = (now) => {
+    const e = reduce ? WRITE_MS + 2000 : now - t0;
+    const p = Math.min(1, e / WRITE_MS), done = p >= 1;
+    ctx.clearRect(0, 0, W, H);
+
+    // written text, revealed left to right by the pen
+    const px = X0 + p * textW;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, X0 + p * textW + 1, H); ctx.clip();
+    ctx.font = FONT; ctx.fillStyle = INK; ctx.textBaseline = 'middle'; ctx.fillText(TEXT, X0, TY);
+    ctx.restore();
+
+    // figure: walks along under the text while writing, then waves
+    const slide = done ? Math.min(1, (e - WRITE_MS) / 500) : 0;
+    const bx = px - 11 + slide * 24;
+    const walking = !done && !reduce, ph = e / 110;
+    const hip = [bx, 54], sh = [bx, 44], FY = 70;
+    const sw = walking ? Math.sin(ph) * 5 : 0;
+    line([hip, [bx - 3 + sw, 62], [bx - 4 + sw * 1.4, FY]]);
+    line([hip, [bx + 3 - sw, 62], [bx + 4 - sw * 1.4, FY]]);
+    line([sh, hip]);
+    // arm that is not writing
+    line([[bx, 45], [bx - 6, 50], [bx - 8, 55 + (walking ? Math.sin(ph + 1) * 2 : 0)]]);
+    // head
+    const hy = 37 + (walking ? Math.abs(Math.sin(ph)) * -1 : 0);
+    ctx.beginPath(); ctx.arc(bx + 1, hy, 5.2, 0, Math.PI * 2); ctx.fillStyle = YELLOW; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+    dot(bx + 3, hy - 0.5, 0.9); dot(bx + 5.5, hy - 0.5, 0.9);
+    ctx.beginPath(); ctx.arc(bx + 4.3, hy + 1.8, 1.8, 0.2, Math.PI - 0.2); ctx.lineWidth = 1.1; ctx.stroke();
+    if (!done) {
+      // writing arm reaches up to the pen
+      const wob = Math.sin(e / 55) * 1.6, hand = [px - 1, TY + 8 + wob];
+      line([[bx, 45], [(bx + hand[0]) / 2 - 3, (45 + hand[1]) / 2 + 2], hand]);
+      line([hand, [hand[0] + 4, hand[1] - 6]], 1.8);
+    } else {
+      const wv = Math.sin(e / 160) * 4;
+      line([[bx, 45], [bx + 8, 44], [bx + 11 + wv * 0.4, 34 + wv * 0.5]]);
+    }
+  };
+  const dot = (x, y, r) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = INK; ctx.fill(); };
+
+  const loop = (now) => {
+    raf = 0; draw(now);
+    if (visible && !document.hidden && !reduce && now - t0 < WRITE_MS + 4000) raf = requestAnimationFrame(loop);
+  };
+  const play = () => { t0 = performance.now(); if (!raf) raf = requestAnimationFrame(loop); };
+  const setup = () => { ctx.font = FONT; textW = ctx.measureText(TEXT).width; };
+
+  setup(); draw(0);
+  if (document.fonts && document.fonts.load) document.fonts.load('21px "Patrick Hand"').then(() => { setup(); if (reduce || !visible) draw(0); }).catch(() => {});
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      const was = visible; visible = entries[0].isIntersecting;
+      if (visible && !was) { if (reduce) draw(0); else play(); }
+    }).observe(canvas);
+  } else { visible = true; play(); }
+  canvas.addEventListener('pointerenter', () => { if (!reduce && visible && performance.now() - t0 > WRITE_MS + 600) play(); });
+})();
