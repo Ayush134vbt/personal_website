@@ -1152,3 +1152,165 @@ if (artWrap && artImg) {
   window.addEventListener('keydown', finish, { once: true });
   raf = requestAnimationFrame(frame);
 })();
+
+
+// ===== Cosmic hero: twinkling stars =====
+(() => {
+  const canvas = document.querySelector('.cosmos-stars');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d'), host = canvas.closest('.hero');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, stars = [], raf = 0, visible = true;
+  let seed = 11; const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+
+  const build = () => {
+    W = host.clientWidth; H = host.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seed = 11; stars = [];
+    const n = Math.round(W * H / 5200);
+    for (let i = 0; i < n; i++) {
+      const cluster = i % 4 === 0;                                   // a denser glittering cluster, upper left
+      const x = cluster ? W * (0.18 + rand() * 0.22) + (rand() - 0.5) * 60 : rand() * W;
+      const y = cluster ? H * (0.18 + rand() * 0.25) + (rand() - 0.5) * 50 : rand() * H * 0.72;
+      stars.push({ x, y, r: 0.5 + rand() * rand() * 2, ph: rand() * 6.28, sp: 0.5 + rand() * 1.5, sparkle: rand() < 0.05 });
+    }
+  };
+  const draw = (now) => {
+    ctx.clearRect(0, 0, W, H);
+    stars.forEach((s) => {
+      const fade = Math.max(0, 1 - Math.max(0, s.y / H - 0.45) / 0.3);
+      const a = (0.5 + 0.5 * Math.sin(now / 1000 * s.sp + s.ph)) * 0.6 + 0.4;
+      ctx.globalAlpha = a * fade;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fill();
+      if (s.sparkle) {
+        const L = 6 + s.r * 4;
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(s.x - L, s.y); ctx.lineTo(s.x + L, s.y); ctx.moveTo(s.x, s.y - L); ctx.lineTo(s.x, s.y + L); ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
+  };
+  const loop = (now) => { raf = 0; draw(now); if (visible && !document.hidden && !prefersReducedMotion) raf = requestAnimationFrame(loop); };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+  build(); draw(0); if (!prefersReducedMotion) kick();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { build(); draw(performance.now()); }, 150); });
+  if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+})();
+
+
+// ===== Header scene: Goku flying across on the Nimbus =====
+(() => {
+  const canvas = document.querySelector('.header-scene');
+  if (!canvas) return;
+  const host = canvas.parentElement, ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, raf = 0, visible = true;
+  const SIL = '#110c26';
+
+  const resize = () => {
+    W = host.clientWidth; H = host.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  // layered mountain ridges that repeat every PERIOD px and scroll slowly
+  const PERIOD = 640;
+  const RIDGES = [
+    { color: '#53427a', base: 0.76, amp: 0.22, speed: 7,  pts: [0.1, 0.55, 0.25, 0.8, 0.45, 0.3, 0.7, 0.9, 0.5, 0.2] },
+    { color: '#382b5c', base: 0.84, amp: 0.18, speed: 15, pts: [0.4, 0.9, 0.3, 0.6, 0.15, 0.7, 0.5, 0.25, 0.8, 0.35] },
+    { color: '#1b1436', base: 0.95, amp: 0.12, speed: 26, pts: [0.7, 0.2, 0.6, 0.95, 0.35, 0.5, 0.15, 0.8, 0.4, 0.65] },
+  ];
+  const ridge = (r, t) => {
+    const off = (t / 1000 * r.speed) % PERIOD, n = r.pts.length, step = PERIOD / n;
+    ctx.beginPath(); ctx.moveTo(0, H);
+    for (let x = -PERIOD; x <= W + PERIOD; x += step) {
+      const i = Math.round((x + off) / step), v = r.pts[((i % n) + n) % n];
+      const px = x - off + PERIOD * 0 , py = H * r.base - v * H * r.amp;
+      ctx.lineTo(px + off - off, py);
+    }
+    ctx.lineTo(W + PERIOD, H); ctx.closePath(); ctx.fillStyle = r.color; ctx.fill();
+  };
+  const ridgeScroll = (r, t) => {
+    const off = (t / 1000 * r.speed) % PERIOD, n = r.pts.length, step = PERIOD / n;
+    ctx.beginPath(); ctx.moveTo(-step * 2, H);
+    for (let k = -2; k * step - off <= W + step; k++) {
+      const x = k * step - off, v = r.pts[((k % n) + n) % n];
+      ctx.lineTo(x, H * r.base - v * H * r.amp);
+    }
+    ctx.lineTo(W + step * 2, H); ctx.closePath(); ctx.fillStyle = r.color; ctx.fill();
+  };
+
+  const moon = (cx, cy, R) => {
+    const g = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * 2.3);
+    g.addColorStop(0, 'rgba(255,150,50,.55)'); g.addColorStop(1, 'rgba(255,120,40,0)');
+    ctx.fillStyle = g; ctx.fillRect(cx - R * 2.4, 0, R * 4.8, H);
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+    const b = ctx.createRadialGradient(cx - R * 0.2, cy - R * 0.2, R * 0.1, cx, cy, R);
+    b.addColorStop(0, '#ff9a2e'); b.addColorStop(0.7, '#f0701f'); b.addColorStop(1, '#c84a1c');
+    ctx.fillStyle = b; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    ctx.fillStyle = 'rgba(255,214,90,.85)';
+    [[-0.55, -0.45, 0.28, 0.2, -0.5], [0.35, -0.5, 0.2, 0.16, 0.4], [0.55, 0.05, 0.14, 0.24, 0.2], [-0.25, 0.4, 0.3, 0.14, 0.1], [-0.7, 0.05, 0.1, 0.2, 0]].forEach(([x, y, rx, ry, rot]) => {
+      ctx.beginPath(); ctx.ellipse(cx + x * R, cy + y * R, rx * R, ry * R, rot, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.restore();
+  };
+
+  // Goku (kid) sitting on the Nimbus, drawn as a silhouette; (0,0) is the middle of the cloud
+  const goku = (x, y, t, s) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(Math.sin(t / 700) * 0.03);
+    ctx.fillStyle = SIL; ctx.strokeStyle = SIL; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    // power pole across the scene
+    ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(-70, 3); ctx.lineTo(60, -2); ctx.stroke();
+    // nimbus: a puffy cloud with a curl at the back
+    ctx.beginPath(); ctx.ellipse(0, 8, 30, 6, 0, 0, Math.PI * 2); ctx.fill();
+    [[-18, 5, 7], [-4, 2, 8], [12, 3, 7], [24, 6, 5]].forEach(([cx, cy, r]) => { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill(); });
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-26, 8); ctx.quadraticCurveTo(-40, 8, -42, 2); ctx.quadraticCurveTo(-43, -2, -38, -1); ctx.stroke();
+    // legs folded, body, arms
+    ctx.beginPath(); ctx.ellipse(2, 3, 12, 4.5, 0.05, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(2, -6, 6.5, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(4, -9); ctx.lineTo(10, -3); ctx.lineTo(7, 1); ctx.stroke();
+    // head + spiky hair
+    ctx.beginPath(); ctx.arc(5, -20, 7.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    [[-4, -17], [-6, -22], [-3, -21], [-4, -29], [1, -24], [4, -32], [7, -26], [12, -30], [12, -23], [14, -20], [12, -16]].forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
+    ctx.closePath(); ctx.fill();
+    // monkey tail swishing behind
+    const w = Math.sin(t / 220) * 3;
+    ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(-3, -1); ctx.bezierCurveTo(-14, 0 + w, -18, -10 + w, -26, -12 - w); ctx.stroke();
+    ctx.restore();
+  };
+
+  const draw = (now) => {
+    const t = reduce ? 0 : now;
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#0f1d46'); sky.addColorStop(1, '#2d3a78');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    // stars
+    for (let i = 0; i < 26; i++) {
+      const sx = (i * 137) % Math.max(W, 1), sy = 4 + ((i * 53) % (H * 0.55)), a = 0.35 + 0.35 * Math.sin(t / 700 + i);
+      ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fillRect(sx, sy, 1.2, 1.2);
+    }
+    // soft clouds drifting
+    [[0.1, 14, 90], [0.55, 52, 120], [0.85, 20, 80]].forEach(([fx, cy, w], i) => {
+      const x = ((fx * W + t * 0.006 * (i + 1)) % (W + 200)) - 100;
+      ctx.fillStyle = 'rgba(120,140,200,.22)'; ctx.beginPath(); ctx.ellipse(x, cy, w / 2, 7, 0, 0, Math.PI * 2); ctx.fill();
+    });
+    moon(W * 0.5, H * 0.5, Math.min(H * 0.6, 46));
+    ridgeScroll(RIDGES[0], t); ridgeScroll(RIDGES[1], t);
+    // Goku crosses the page, passing in front of the moon
+    const speed = 80, span = W + 200;
+    const gx = reduce ? W * 0.5 : -100 + ((t / 1000 * speed) % span);
+    const gy = H * 0.42 + Math.sin(t / 650) * 2.5;
+    goku(gx, gy, t, Math.min(0.9, H / 90));
+    ridgeScroll(RIDGES[2], t);
+  };
+
+  const reduce = prefersReducedMotion;
+  const loop = (now) => { raf = 0; draw(now); if (visible && !document.hidden && !reduce) raf = requestAnimationFrame(loop); };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+  resize(); draw(0); if (!reduce) kick();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); draw(performance.now()); }, 120); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
+})();

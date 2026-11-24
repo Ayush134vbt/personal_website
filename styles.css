@@ -317,3 +317,44 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 #intro { overflow: hidden; }
 #intro canvas { display: block; image-rendering: pixelated; }
 .intro-skip { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; font: 600 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .4); }
+
+/* ---------- Cosmic hero background ---------- */
+.hero { position: relative; isolation: isolate; }
+.hero > .hero-copy, .hero > .hero-art-wrap { position: relative; z-index: 1; }
+.cosmos { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 55% at 28% 30%, rgba(150, 110, 255, .38), transparent 70%),
+    radial-gradient(ellipse 70% 40% at 0% 100%, rgba(110, 15, 20, .65), transparent 70%),
+    radial-gradient(ellipse 55% 35% at 60% 100%, rgba(120, 20, 10, .45), transparent 70%),
+    linear-gradient(180deg, #7d3a9f 0%, #b9489b 26%, #de5483 46%, #f4642d 64%, #ff9a22 82%, #ffc42e 100%); }
+.cosmos-clouds { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .95;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 42%, transparent 78%); mask-image: linear-gradient(to top, #000 0%, #000 42%, transparent 78%); }
+.cosmos-stars { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cosmos-sun { position: absolute; left: -90px; top: -90px; width: 360px; height: 360px; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, .95) 12%, rgba(255, 225, 225, .55) 30%, rgba(255, 170, 210, .18) 55%, transparent 72%); }
+.flare { position: absolute; border-radius: 50%; border: 1px solid rgba(255, 235, 200, .18);
+  background: radial-gradient(circle, rgba(255, 200, 100, .32), rgba(255, 150, 70, .2) 62%, rgba(255, 150, 70, 0) 64%); }
+.flare-1 { width: 170px; height: 170px; left: 44%; bottom: 8%; }
+.flare-2 { width: 80px; height: 80px; left: 52%; bottom: 3%; }
+.flare-3 { width: 54px; height: 54px; left: 20%; top: 36%; background: radial-gradient(circle, rgba(255, 150, 160, .4), rgba(255, 130, 150, 0) 70%); border: 0; }
+.cosmos::after { content: ''; position: absolute; inset: 0; opacity: .16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+/* readable text on top of the cosmic hero */
+.hero-copy .eyebrow, .hero-copy .micro-label { width: fit-content; max-width: 100%; padding: 7px 14px; background: var(--paper); border: 1.5px solid var(--ink); border-radius: 99px; box-shadow: 3px 3px 0 var(--ink); }
+.hero-copy .hero-intro { padding: 16px 20px; background: var(--paper); border: 2px solid var(--ink); border-radius: var(--r-md); box-shadow: 5px 5px 0 var(--ink); color: #3d3846; }
+.mini-planet { position: absolute; right: 45.5%; top: 4%; width: clamp(90px, 8.6vw, 124px); height: auto; filter: drop-shadow(0 6px 14px rgba(60, 10, 40, .4)); animation: planetFloat 7s ease-in-out infinite; }
+@keyframes planetFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-9px) rotate(2deg); } }
+@media (max-width: 1100px) { .mini-planet { right: 6%; top: 3%; } }
+@media (prefers-reduced-motion: reduce) { .mini-planet { animation: none; } }
+
+/* ---------- Header scene: Goku on the Flying Nimbus ---------- */
+.site-header { background: #14224f; }
+.header-scene { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+.site-header > :not(.header-scene) { position: relative; z-index: 1; }
+@media (min-width: 701px) {
+  .primary-nav .nav-link { color: #fbf3e0; text-shadow: 0 1px 4px rgba(10, 8, 30, .75); }
+  .primary-nav .nav-link span { color: rgba(251, 243, 224, .65); }
+  .primary-nav .nav-link::after { background: var(--yellow); }
+  .primary-nav .nav-link:hover, .primary-nav .nav-link.active:hover { color: var(--yellow); }
+}
+@media (max-width: 700px) { .menu-toggle { background: var(--paper); } }
