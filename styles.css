@@ -358,3 +358,8 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
   .primary-nav .nav-link:hover, .primary-nav .nav-link.active:hover { color: var(--yellow); }
 }
 @media (max-width: 700px) { .menu-toggle { background: var(--paper); } }
+
+/* project banners keep their artwork's proportions on tablets and phones, so nothing is cropped */
+@media (max-width: 900px) {
+  .project-visual { height: auto; aspect-ratio: 800 / 520; }
+}
