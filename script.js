@@ -292,18 +292,11 @@ const burst = (x, y) => {
 
 const portrait = document.querySelector('.hero-portrait');
 if (portrait) {
-  const quips = ['Hi 👋', 'Caught mid-smile', 'Still learning R', 'Ask me about Python'];
-  const tag = portrait.querySelector('.portrait-tag');
-  const original = tag.innerHTML;
-  let q = 0;
   portrait.addEventListener('click', (e) => {
     burst(e.clientX, e.clientY);
     portrait.classList.remove('is-wiggle');
     void portrait.offsetWidth;
     portrait.classList.add('is-wiggle');
-    tag.innerHTML = `<span class="portrait-dot"></span> ${quips[q++ % quips.length].toUpperCase()}`;
-    clearTimeout(portrait._t);
-    portrait._t = setTimeout(() => { tag.innerHTML = original; }, 2400);
   });
 }
 const star = document.querySelector('.bottom-star');
@@ -909,7 +902,7 @@ if (artWrap && artImg) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const INK = '#191526', YELLOW = '#ffe93a';
+  const INK = '#f6efdd', YELLOW = '#ffe93a';      // cream ink so it reads on the dark night sky
   const reduce = prefersReducedMotion;
   const mq = window.matchMedia('(max-width: 700px)');
   const GAP = 24, TY = 17, WRITE_MS = 2800, PAUSE = 240;
@@ -971,7 +964,9 @@ if (artWrap && artImg) {
       if (cw <= 0) return;
       ctx.save(); ctx.beginPath(); ctx.rect(X0 - 2, L.y - 16, cw + 2, 32); ctx.clip();
       ctx.font = `600 ${size}px "Patrick Hand", "Comic Sans MS", cursive`;
-      ctx.fillStyle = INK; ctx.textBaseline = 'middle'; ctx.fillText(L.txt, X0, L.y);
+      ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(1, 24, 52, .9)'; ctx.lineWidth = 3.5; ctx.strokeText(L.txt, X0, L.y);   // dark outline so it reads over the light clouds
+      ctx.fillStyle = INK; ctx.fillText(L.txt, X0, L.y);
       ctx.restore();
     });
 
@@ -1020,139 +1015,33 @@ if (artWrap && artImg) {
 })();
 
 
-// ===== Dragon ball intro =====
+// ===== Dragon ball intro: the Shenron summoning clip, played once =====
 (() => {
   const intro = document.querySelector('#intro');
-  const canvas = document.querySelector('#intro-canvas');
   const root = document.documentElement;
-  if (!intro || !canvas || !root.classList.contains('intro-on')) return;
-  const ctx = canvas.getContext('2d');
-  const S = 3;                                             // screen px per "pixel", for the retro look
-  const w = Math.ceil(window.innerWidth / S), h = Math.ceil(window.innerHeight / S);
-  canvas.width = w; canvas.height = h;
-  canvas.style.width = w * S + 'px'; canvas.style.height = h * S + 'px';   // exact multiple, so balls stay round
-  const R = Math.max(9, Math.min(16, Math.round(Math.min(w, h) * 0.075)));
-
-  // star layouts (unit coords inside the ball) for 1..7 stars
-  const STARS = [
-    [[0, 0]], [[-.32, -.08], [.32, .08]], [[-.38, .12], [0, -.32], [.38, .12]],
-    [[-.3, -.3], [.3, -.3], [-.3, .3], [.3, .3]], [[-.3, -.3], [.3, -.3], [0, 0], [-.3, .3], [.3, .3]],
-    [[-.4, -.28], [0, -.28], [.4, -.28], [-.4, .28], [0, .28], [.4, .28]],
-    [[-.4, -.28], [0, -.28], [.4, -.28], [-.4, .28], [0, .28], [.4, .28], [0, 0]],
-  ];
-  const PILE = [[-2.6, .9], [-.8, -1.5], [2, -2], [.6, .2], [3.4, .8], [-.9, 2.2], [1.9, 2.2]];
-  const cx0 = w / 2, cy0 = h * 0.56, K = R * 1.2;
-  const balls = PILE.map(([x, y], i) => ({ i, tx: cx0 + x * K, ty: cy0 + y * K, n: i + 1 }));
-
-  const clamp01 = (t) => Math.max(0, Math.min(1, t));
-  const easeInOut = (t) => t * t * (3 - 2 * t);
-  const easeIn = (t) => t * t;
-  const bounce = (t) => {
-    t = clamp01(t);
-    if (t < 1 / 2.75) return 7.5625 * t * t;
-    if (t < 2 / 2.75) { t -= 1.5 / 2.75; return 7.5625 * t * t + .75; }
-    if (t < 2.5 / 2.75) { t -= 2.25 / 2.75; return 7.5625 * t * t + .9375; }
-    t -= 2.625 / 2.75; return 7.5625 * t * t + .984375;
-  };
-
-  const star = (x, y, r, rot) => {
-    ctx.beginPath();
-    for (let k = 0; k < 10; k++) {
-      const a = rot - Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r;
-      ctx[k ? 'lineTo' : 'moveTo'](x + Math.cos(a) * rr, y + Math.sin(a) * rr);
-    }
-    ctx.closePath(); ctx.fill();
-  };
-
-  const drawBall = (x, y, r, n, glow, spin) => {
-    if (glow > 0) {
-      const g = ctx.createRadialGradient(x, y, r * 0.8, x, y, r * (1.5 + glow));
-      g.addColorStop(0, `rgba(255,170,50,${0.55 * glow})`); g.addColorStop(1, 'rgba(255,140,30,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * (1.5 + glow), 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.save();
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip();
-    const body = ctx.createRadialGradient(x - r * .3, y - r * .3, 0, x, y, r);
-    body.addColorStop(0, '#ffb53d'); body.addColorStop(.55, '#ff7a1c'); body.addColorStop(1, '#df3f1a');
-    ctx.fillStyle = body; ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    const yel = ctx.createRadialGradient(x + r * .35, y + r * .45, 0, x + r * .35, y + r * .45, r * .75);
-    yel.addColorStop(0, 'rgba(255,232,70,.9)'); yel.addColorStop(1, 'rgba(255,232,70,0)');
-    ctx.fillStyle = yel; ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    ctx.fillStyle = '#d4291a';
-    STARS[n - 1].forEach(([sx, sy]) => star(x + (sx + Math.sin(spin) * 0.08) * r * 1.05, y + sy * r * 1.05, r * (n > 4 ? .2 : .25), spin * 0.2));
-    ctx.restore();
-    ctx.beginPath(); ctx.arc(x, y, r - 0.4, 0, Math.PI * 2); ctx.strokeStyle = '#ffe3a6'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.save(); ctx.translate(x - r * .38, y - r * .46); ctx.rotate(-.6);
-    ctx.beginPath(); ctx.ellipse(0, 0, r * .3, r * .19, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fill();
-    ctx.restore();
-  };
-
-  const T = { drop: 1300, idle: 2300, orbit: 3300, spiral: 3950, flash: 4400 };
-  let start = 0, raf = 0, finished = false;
-
-  const frame = (now) => {
-    if (!start) start = now;
-    const t = now - start;
-    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
-    const ocx = w / 2, ocy = h / 2, Ro = Math.min(w, h) * 0.3;
-
-    // faint stars in the dark
-    for (let i = 0; i < 28; i++) {
-      const sx = (i * 97) % w, sy = (i * 53) % h, tw = 0.3 + 0.3 * Math.sin(t / 400 + i);
-      ctx.fillStyle = `rgba(255,255,255,${tw * 0.5})`; ctx.fillRect(sx, sy, 1, 1);
-    }
-
-    balls.forEach((b) => {
-      let x = b.tx, y = b.ty, glow = 0, scale = 1;
-      const spin = t / 300 + b.i;
-      if (t < T.drop) {
-        const u = (t - b.i * 110) / 650;
-        if (u <= 0) return;
-        y = -R * 2 + (b.ty + R * 2) * bounce(u);
-      } else if (t < T.idle) {
-        glow = 0.5 + 0.35 * Math.sin((t - T.drop) / 120 + b.i);
-        y = b.ty + Math.sin(t / 260 + b.i) * 1.2;
-      } else {
-        const u = easeInOut(clamp01((t - T.idle) / (T.orbit - T.idle)));
-        const rot = ((t - T.idle) / 1000) ** 2 * 2.2 + b.i / 7 * Math.PI * 2 - Math.PI / 2;
-        let rad = Ro;
-        if (t >= T.orbit) rad = Ro * (1 - easeIn(clamp01((t - T.orbit) / (T.spiral - T.orbit))));
-        const ox = ocx + Math.cos(rot) * rad, oy = ocy + Math.sin(rot) * rad * 0.8;
-        x = b.tx + (ox - b.tx) * u; y = b.ty + (oy - b.ty) * u;
-        glow = 0.9 + 0.5 * u;
-        scale = 1 - 0.15 * u;
-      }
-      drawBall(x, y, R * scale, b.n, glow, spin);
-    });
-
-    // flash
-    if (t >= T.spiral) {
-      const u = clamp01((t - T.spiral) / (T.flash - T.spiral));
-      const rr = u * Math.max(w, h);
-      const g = ctx.createRadialGradient(ocx, ocy, 0, ocx, ocy, Math.max(1, rr));
-      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.6, `rgba(255,214,120,${0.9})`); g.addColorStop(1, 'rgba(255,160,40,0)');
-      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = `rgba(255,255,255,${easeIn(u)})`; ctx.fillRect(0, 0, w, h);
-    }
-    if (t >= T.flash) { finish(); return; }
-    raf = requestAnimationFrame(frame);
-  };
+  if (!intro || !root.classList.contains('intro-on')) return;
+  const PLAY_MS = 5800;                 // 49 frames at 100 ms, then a short hold on the last frame
+  let finished = false, timer = 0;
 
   const finish = (e) => {
     if (finished) return; finished = true;
-    const skipped = !!(e && e.type);
-    cancelAnimationFrame(raf);
-    try { sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
-    if (!skipped) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }   // end on white, then fade into the site
+    clearTimeout(timer);
+    try { sessionStorage.setItem('intro-seen', '1'); } catch (err) {}
     intro.classList.add('out');
     setTimeout(() => { root.classList.remove('intro-on'); intro.remove(); }, 700);
   };
 
+  // assets/intro.png is an animated PNG set to play once and hold its last frame
+  const img = new Image();
+  img.className = 'intro-clip'; img.alt = '';
+  img.style.objectFit = window.innerWidth / window.innerHeight >= 1.2 ? 'cover' : 'contain';
+  img.onload = () => { intro.insertBefore(img, intro.firstChild); timer = setTimeout(finish, PLAY_MS); };
+  img.onerror = finish;
+  img.src = 'assets/intro.png?' + Date.now();
+
   intro.addEventListener('pointerdown', finish);
   window.addEventListener('keydown', finish, { once: true });
-  raf = requestAnimationFrame(frame);
 })();
-
 
 // ===== Cosmic hero: twinkling stars =====
 (() => {
@@ -1313,4 +1202,221 @@ if (artWrap && artImg) {
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); draw(performance.now()); }, 120); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
   if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
+})();
+
+// ===== Projects heading: the clip's fireball flies on, sets a paper scroll alight, and it burns away to reveal "My Projects" =====
+(() => {
+  const box = document.querySelector('#fire-heading');
+  if (!box) return;
+  const clip = box.querySelector('.fh-clip'), img = clip.querySelector('img');
+  const title = clip.querySelector('.fh-inner'), canvas = clip.querySelector('.fh-burn');
+  const ctx = canvas.getContext('2d');
+  const FIRE_AT = 950;                    // the fireball reaches the clip's right edge about 1 s in (12 frames at 160 ms)
+  const TRAVEL = 380, BURN = 1500;        // flame flight to the scroll, then how long the scroll takes to burn
+  let U = 5, w = 0, h = 0, paper = null, noise = null, src = { x: 0, y: 0 };
+  let state = 'covered', t0 = 0, last = 0, raf = 0, timer = 0, played = false, parts = [];
+  let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+
+  const layout = () => {
+    const c = clip.getBoundingClientRect();
+    if (!c.width) return;
+    U = Math.max(3, Math.round(c.height / 335 * 4));
+    w = Math.ceil(c.width / U); h = Math.ceil(c.height / U);
+    canvas.width = w; canvas.height = h;
+    const r = title.getBoundingClientRect(), g = img.getBoundingClientRect();
+    const x = Math.floor((r.left - c.left) / U) - 3, y = Math.floor((r.top - c.top) / U) - 2;
+    paper = { x, y, pw: Math.ceil(r.width / U) + 6, ph: Math.ceil(r.height / U) + 4 };
+    seed = 11; noise = Float32Array.from({ length: paper.pw * paper.ph }, () => rnd());
+    src = { x: (g.right - c.left) / U - 3, y: (g.top - c.top + g.height * 0.5) / U };
+  };
+
+  // the scroll, partly burnt: p runs from 0 (untouched) past 1 (gone); cells burn left to right with a ragged edge
+  const drawPaper = (p, spawn) => {
+    const { x, y, pw, ph } = paper;
+    for (let j = 0; j < ph; j++) {
+      for (let i = 0; i < pw; i++) {
+        const n = noise[j * pw + i];
+        const thr = (i / pw) * 0.86 + n * 0.12 + Math.abs(j - ph / 2) / ph * 0.06;
+        const d = p - thr;
+        let col;
+        if (d < 0) {
+          const edge = i === 0 || j === 0 || i === pw - 1 || j === ph - 1;
+          col = edge ? '#9b927c' : (j === 1 || j === ph - 2) ? '#ddd3b8' : n > 0.94 ? '#e2d8be' : '#f1e9d3';
+          if (d > -0.035) col = '#c7a77a';                       // scorched just ahead of the flame
+        } else if (d < 0.03) col = '#2a1a12';                    // charred edge
+        else if (d < 0.085) {
+          col = ['#ffc94a', '#ff8a1e', '#ff3b1c'][Math.floor(Math.random() * 3)];
+          if (spawn && Math.random() < 0.012) parts.push({ x: x + i, y: y + j, vx: (Math.random() - 0.5) * 0.006, vy: -0.012 - Math.random() * 0.02, life: 700 + Math.random() * 600, age: 0, ember: true });
+        } else continue;                                         // burnt away: the title shows through
+        ctx.fillStyle = col; ctx.fillRect(x + i, y + j, 1, 1);
+      }
+    }
+  };
+
+  const drawParts = (dt) => {
+    parts = parts.filter((q) => (q.age += dt) < q.life);
+    parts.forEach((q) => {
+      q.x += q.vx * dt; q.y += q.vy * dt;
+      const k = q.age / q.life;
+      ctx.globalAlpha = q.ember ? 1 - k : 1 - k * 0.4;
+      ctx.fillStyle = k < 0.3 ? '#ffd65a' : k < 0.65 ? '#ff8a1e' : '#e8321c';
+      const s = q.big ? 2 : 1;
+      ctx.fillRect(Math.round(q.x), Math.round(q.y), s, s);
+    });
+    ctx.globalAlpha = 1;
+  };
+
+  const frame = (now) => {
+    raf = 0;
+    const e = now - t0, dt = Math.min(50, now - last || 16); last = now;
+    ctx.clearRect(0, 0, w, h);
+    // flames keep flying out of the clip towards the scroll
+    if (e < 560) {
+      const tx = paper.x + 1, ty = paper.y + paper.ph / 2;
+      for (let k = 0; k < 5; k++) {
+        const life = TRAVEL * (0.85 + Math.random() * 0.3);
+        parts.push({ x: src.x + Math.random() * 2, y: src.y + (Math.random() - 0.5) * 6, vx: (tx - src.x) / life, vy: (ty + (Math.random() - 0.5) * paper.ph * 0.8 - src.y) / life, life, age: 0, big: Math.random() < 0.45 });
+      }
+    }
+    const u = Math.max(0, Math.min(1, (e - TRAVEL) / BURN));
+    const p = e < TRAVEL ? -0.01 : (u * u * (3 - 2 * u)) * 1.12;
+    if (p < 1.11) drawPaper(p, true);
+    drawParts(dt);
+    if (e < TRAVEL + BURN + 200 || parts.length) raf = requestAnimationFrame(frame);
+    else { state = 'done'; ctx.clearRect(0, 0, w, h); }
+  };
+
+  const cover = () => { layout(); if (paper) { ctx.clearRect(0, 0, w, h); drawPaper(-1, false); } };
+  const ignite = () => { state = 'burning'; parts = []; t0 = last = performance.now(); if (!raf) raf = requestAnimationFrame(frame); };
+
+  const play = () => {
+    clearTimeout(timer); cancelAnimationFrame(raf); raf = 0;
+    if (prefersReducedMotion) { img.src = 'assets/fire-heading-last.png'; state = 'done'; ctx.clearRect(0, 0, w, h); return; }
+    state = 'covered'; cover();
+    const next = new Image();
+    next.onload = () => { img.src = next.src; timer = setTimeout(ignite, FIRE_AT); };
+    next.src = 'assets/fire-heading.webp?' + Date.now();
+  };
+
+  if (prefersReducedMotion) state = 'done';
+  const ready = () => { if (state === 'covered') cover(); else layout(); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready);
+  ready();
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (state !== 'burning') ready(); }).observe(clip);
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !played) { played = true; play(); io.disconnect(); }
+    }, { threshold: 0.45 });
+    io.observe(box);
+  } else { play(); }
+  clip.addEventListener('click', play);
+})();
+
+
+// ===== Projects background: a greyscale pixel-art scene (sky, drifting clouds, horizon, trees, pagodas, grass) =====
+(() => {
+  const canvas = document.querySelector('.pixel-scene');
+  if (!canvas) return;
+  const host = canvas.parentElement, ctx = canvas.getContext('2d');
+  const P = 6;                                            // one art pixel = 6 CSS px, close to the clip's chunky pixels
+  const PAL = { X: '#d6d6d6', x: '#c2c2c2', G: '#b3b3b3', g: '#9c9c9c', T: '#9a9a9a', R: '#a3a3a3', W: '#d2d2d2', D: '#8a8a8a', S: '#929292' };
+  const CLOUD = ['....XXXX......', '..XXXXXXXX....', '.XXXXXXXXXXX..', 'XXXXXXXXXXXXXX', '.xxxxxxxxxxxx.'];
+  const TREE = ['..GGGG..', '.GGGGGG.', 'GGGgGGGG', 'GGGGGgGG', '.GGgGGG.', '..GGGG..', '...TT...', '...TT...', '...TT...'];
+  const PAGODA = ['.......S.......', '......SSS......', '...RRRRRRRRR...', '.RRRRRRRRRRRRR.', '....WWWWWWW....', '....WDWDWDW....', '.RRRRRRRRRRRRR.', 'RRRRRRRRRRRRRRR', '..WWWWWWWWWWW..', '..WDDWWWWWDDW..', '..WWWWWDWWWWW..', '..WWWWWDWWWWW..'];
+  let w = 0, h = 0, raf = 0, visible = true, last = 0;
+  let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  let clouds = [], props = [], specks = [];
+
+  const sprite = (rows, x, y) => {
+    rows.forEach((row, j) => { for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch !== '.') { ctx.fillStyle = PAL[ch]; ctx.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1); } } });
+  };
+
+  const build = () => {
+    w = Math.ceil(host.clientWidth / P); h = Math.ceil(host.clientHeight / P);
+    canvas.width = w; canvas.height = h;
+    seed = 7;
+    const ground = h - 14;
+    clouds = Array.from({ length: Math.max(4, Math.round(w * h / 2600)) }, () => ({ x: rnd() * (w + 30) - 15, y: 4 + rnd() * (ground - 40), sp: 0.4 + rnd() * 0.6 }));
+    props = []; let x = 2 + rnd() * 10;
+    while (x < w - 8) { const isPagoda = rnd() < 0.28; props.push({ x, kind: isPagoda ? PAGODA : TREE }); x += (isPagoda ? 15 : 8) + 6 + rnd() * 26; }
+    specks = Array.from({ length: Math.round(w / 3) }, () => ({ x: Math.floor(rnd() * w), y: ground + 3 + Math.floor(rnd() * 10), big: rnd() < 0.35 }));
+  };
+
+  const draw = (t) => {
+    ctx.fillStyle = '#fcfcfc'; ctx.fillRect(0, 0, w, h);
+    clouds.forEach((c) => sprite(CLOUD, ((c.x + t / 1000 * c.sp) % (w + 30)) - 15, c.y));
+    const ground = h - 14;
+    props.forEach((p) => sprite(p.kind, p.x, ground - p.kind.length));
+    ctx.fillStyle = '#aeaeae'; ctx.fillRect(0, ground, w, 1); ctx.fillStyle = '#c4c4c4'; ctx.fillRect(0, ground + 1, w, 1);
+    specks.forEach((s) => { ctx.fillStyle = '#a6a6a6'; ctx.fillRect(s.x, s.y, 1, 1); if (s.big) { ctx.fillRect(s.x + 1, s.y - 1, 1, 1); ctx.fillRect(s.x + 2, s.y, 1, 1); } });
+  };
+
+  const loop = (now) => {
+    raf = 0;
+    if (now - last > 180) { draw(now); last = now; }      // step slowly, like old sprite animation
+    if (visible && !document.hidden && !prefersReducedMotion) raf = requestAnimationFrame(loop);
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+  build(); draw(0); if (!prefersReducedMotion) kick();
+  if ('ResizeObserver' in window) new ResizeObserver(() => { build(); draw(performance.now()); }).observe(host);
+  if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+})();
+
+
+// ===== Projects banner: carry the clip's village on behind the title (horizon, pagodas, houses, trees, grass) =====
+(() => {
+  const clip = document.querySelector('.fh-clip');
+  const canvas = clip && clip.querySelector('.fh-scene');
+  if (!canvas) return;
+  const img = clip.querySelector('img'), ctx = canvas.getContext('2d');
+  const PAL = { G: '#b8b8b8', g: '#a2a2a2', T: '#a6a6a6', R: '#b0b0b0', r: '#9c9c9c', W: '#d6d6d6', D: '#a0a0a0', S: '#a8a8a8' };
+  const PAGODA = [
+    '..........S..........', '.........SSS.........', '..........S..........', '....rRRRRRRRRRRRr....', '..rRRRRRRRRRRRRRRRr..',
+    '.......WWWWWWW.......', '.......WDWWWDW.......', '.......WWWWWWW.......', '...rRRRRRRRRRRRRRr...', '.rRRRRRRRRRRRRRRRRRr.',
+    '.....WWWWWWWWWWW.....', '.....WDDWWWWWDDW.....', '.....WWWWWWWWWWW.....', '..rRRRRRRRRRRRRRRRr..', 'rRRRRRRRRRRRRRRRRRRRr',
+    '...WWWWWWWWWWWWWWW...', '...WDDWWWDDDWWWDDW...', '...WDDWWWDDDWWWDDW...', '...WWWWWWDDDWWWWWW...', '...WWWWWWDDDWWWWWW...'];
+  const TREE = ['....GGG....', '..GGGGGGG..', '.GGGGgGGGG.', 'GGGGGGGGgGG', 'GGgGGGGGGGG', 'GGGGGGgGGGG', '.GGGGGGGGG.', '..GGGgGGG..', '....GGG....', '.....T.....', '.....T.....', '.....T.....', '.....T.....'];
+  const HOUSE = ['....rRRRr....', '..rRRRRRRRr..', 'rRRRRRRRRRRRr', '.WWWWWWWWWWW.', '.WDDWWWWWDDW.', '.WDDWWDWWDDW.', '.WWWWWDWWWWW.', '.WWWWWDWWWWW.'];
+  const ORDER = [PAGODA, TREE, HOUSE, TREE, TREE, PAGODA, HOUSE, TREE, PAGODA, TREE, HOUSE, TREE];
+
+  const sprite = (rows, x, y) => rows.forEach((row, j) => {
+    for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch !== '.') { ctx.fillStyle = PAL[ch]; ctx.fillRect(x + i, y + j, 1, 1); } }
+  });
+
+  const draw = () => {
+    const W = clip.clientWidth, H = clip.clientHeight;
+    if (!W || !H) return;
+    const U = Math.max(3, Math.round(H / 335 * 4));           // the clip's own pixel size on screen
+    const w = Math.ceil(W / U), h = Math.ceil(H / U);
+    canvas.width = w; canvas.height = h;
+    ctx.clearRect(0, 0, w, h);
+    const ground = Math.round(h * 0.755);
+    ctx.fillStyle = '#aeaeae'; ctx.fillRect(0, ground, w, Math.max(1, Math.round(h * 0.018)));
+    // where the clip sits, in art pixels; scenery fills the space either side of it
+    const r = img.getBoundingClientRect(), c = clip.getBoundingClientRect();
+    const gl = Math.floor((r.left - c.left) / U), gr = Math.ceil((r.right - c.left) / U);
+    const place = (from, to) => {
+      let x = from, k = 0;
+      while (true) {
+        const s = ORDER[k % ORDER.length]; k++;
+        if (x + s[0].length > to) break;
+        sprite(s, x, ground - s.length);
+        x += s[0].length + 3 + ((k * 5) % 7);
+      }
+    };
+    place(gr - 2, w - 1);
+    if (gl > 14) place(1, gl + 2);
+    let seed = 3; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    ctx.fillStyle = '#a6a6a6';
+    for (let i = 0; i < w / 2.5; i++) {
+      const x = Math.floor(rnd() * w), y = ground + 3 + Math.floor(rnd() * (h - ground - 5));
+      if (x > gl && x < gr) continue;
+      ctx.fillRect(x, y, 1, 1); if (rnd() < 0.35) { ctx.fillRect(x + 1, y - 1, 1, 1); ctx.fillRect(x + 2, y, 1, 1); }
+    }
+  };
+
+  draw();
+  if (img.complete) draw(); else img.addEventListener('load', draw, { once: true });
+  if ('ResizeObserver' in window) new ResizeObserver(draw).observe(clip);
 })();

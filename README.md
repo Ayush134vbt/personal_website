@@ -10,12 +10,13 @@ A responsive two-section portfolio website built with plain HTML, CSS and JavaSc
 - **Neo-brutalist meets retro-surreal:** chunky hard shadows, bold ink borders, rounded squares, and vibrant pastel blocks.
 - **Artwork:**
   - Hero image: a painted scene of colourful buildings under a swirling spiral cloud (`buildings-clouds.jpg`).
-  - Hero portrait: rounded-square photo with a coral drop shadow and "AYUSH, IRL" sticker tag.
+  - Hero portrait: rounded-square photo with a coral drop shadow.
   - Project illustrations: custom SVGs for the bike-demand chart and the linked SQL tables.
 - **Rock-skipping game (canvas):** a hand-drawn, pen-and-ink scene in the style of a newspaper cartoon, set in a dusty, WALL-E-like wasteland with a small orange robot who throws stones across a murky lake. Click or press Space to throw; it skips 1–10 times, shows a result bubble and remembers your best score in `localStorage`. The lettering uses the Patrick Hand font.
-- **Dragon ball intro (canvas):** the site opens with a short pixel-art animation: seven dragon balls drop in, glow, spiral together and flash into the page. Click or press any key to skip. It plays once per browser session (`sessionStorage`) and is skipped for visitors with reduced motion.
-- **Cosmic hero background:** a smoggy purple-to-orange sky with fiery clouds (SVG turbulence filters), a glowing sun, lens flares, film grain, twinkling stars (canvas) and a small floating planet with an orbiting dot. The text blocks sit on cream cards so they stay readable.
+- **Dragon ball intro:** the site opens with a pixel-art clip of the seven dragon balls summoning Shenron (`assets/intro.png`, an animated PNG that plays once and holds its last frame, about 6 seconds). Click or press any key to skip. It plays once per browser session (`sessionStorage`) and is skipped for visitors with reduced motion.
+- **Home background:** a dark navy night sky with soft, stippled clouds along the bottom (`assets/hero-clouds.jpg`). The text blocks sit on cream cards, and the "Visit GitHub" link and the stick-figure credit are drawn in cream so they stay readable.
 - **Header scene (canvas):** the top bar is a night sky with a big orange moon, scrolling mountain ridges and kid Goku flying across on the Nimbus cloud. The nav links are cream on top of it.
+- **Projects heading:** a short pixel-art clip of a ninja breathing fire, with the flame recoloured red (`assets/fire-heading.webp`, plays once when the section scrolls into view). A pixel paper scroll hangs in the sky beside the clip; the fireball flies on out of the clip, sets it alight, and it burns away from left to right with a charred, glowing edge and rising embers, revealing "MY PROJECTS" (Press Start 2P) underneath. Click the clip to replay.
 - **Stick figure writer (canvas):** a small stick figure walks along and writes "Photo taken by Anjola" next to the portrait, then waves. Hover to replay.
 - **Dino runner (canvas):** a small endless-runner game; press Space, Up Arrow or tap to jump.
 - **Interactive layer:**
@@ -40,8 +41,13 @@ personal_website/
     ├── ayush.jpg
     ├── ayush-name.jpg
     ├── buildings-clouds.jpg
+    ├── hero-clouds.jpg
     ├── bike-illustration.svg
     ├── sql-illustration.svg
+    ├── intro.png
+    ├── fire-heading.webp
+    ├── fire-heading-first.png
+    ├── fire-heading-last.png
     └── favicon.svg
 ```
 
@@ -51,7 +57,7 @@ personal_website/
 2. **A web browser** — Chrome, Safari or Firefox to view the website.
 3. **Optional: Live Server extension for VS Code** — gives you a local preview that refreshes as you save changes. You do not need Node.js, npm, React, Astro or a database for this version.
 
-The site uses Google Fonts (Syne, DM Sans, Fraunces and Patrick Hand). An internet connection is needed to load those fonts. If unavailable, fallback fonts will be used.
+The site uses Google Fonts (Syne, DM Sans, Fraunces, Patrick Hand and Press Start 2P). An internet connection is needed to load those fonts. If unavailable, fallback fonts will be used.
 
 ## Open the website
 

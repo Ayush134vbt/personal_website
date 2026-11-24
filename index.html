@@ -9,13 +9,13 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&family=Press+Start+2P&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>(function(){try{if(sessionStorage.getItem("intro-seen")||matchMedia("(prefers-reduced-motion: reduce)").matches)return}catch(e){}var d=document.documentElement;d.classList.add("intro-on");setTimeout(function(){d.classList.remove("intro-on")},9000)})();</script>
   <script src="script.js" defer></script>
 </head>
 <body>
-  <div id="intro" aria-hidden="true"><canvas id="intro-canvas"></canvas><span class="intro-skip">click to skip</span></div>
+  <div id="intro" aria-hidden="true"><span class="intro-skip">click to skip</span></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="scroll-progress" aria-hidden="true"></div>
@@ -41,63 +41,21 @@
   </header>
 
   <main id="main">
-    <h1 class="visually-hidden">Ayush Prasad — Data Science and Psychology at Victoria University of Wellington</h1>
+    <h1 class="visually-hidden">Ayush Prasad: Data Science and Psychology at Victoria University of Wellington</h1>
 
     <section class="hero" id="home" aria-label="Introduction">
-      <div class="cosmos" aria-hidden="true">
-        <svg class="cosmos-clouds" width="100%" height="100%" preserveAspectRatio="none">
-          <defs>
-            <filter id="fire-a" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.005 0.013" numOctaves="5" seed="7"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 .5  0 0 0 0 .08  3 0 0 0 -1.05"/></filter>
-            <filter id="fire-b" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="4" seed="21"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 .86  0 0 0 0 .3  0 4 0 0 -2.15"/></filter>
-          </defs>
-          <rect width="100%" height="100%" filter="url(#fire-a)"/>
-          <rect width="100%" height="100%" filter="url(#fire-b)"/>
-        </svg>
-        <canvas class="cosmos-stars"></canvas>
-        <span class="cosmos-sun"></span>
-        <span class="flare flare-1"></span><span class="flare flare-2"></span><span class="flare flare-3"></span>
-        <svg class="mini-planet" viewBox="0 0 200 200" width="150" height="150">
-          <defs>
-            <radialGradient id="moss" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#b5c258"/><stop offset=".55" stop-color="#76913a"/><stop offset="1" stop-color="#3b5524"/></radialGradient>
-            <radialGradient id="shade" cx=".3" cy=".25" r=".95"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#1b1030" stop-opacity=".6"/></radialGradient>
-            <clipPath id="orb"><circle cx="100" cy="100" r="60"/></clipPath>
-          </defs>
-          <g transform="rotate(-22 100 100)">
-            <path d="M 8 100 A 92 36 0 0 1 192 100" fill="none" stroke="#fff3d6" stroke-opacity=".75" stroke-width="1.6"/>
-          </g>
-          <circle cx="100" cy="100" r="60" fill="url(#moss)"/>
-          <g clip-path="url(#orb)">
-            <path d="M 52 30 C 92 62, 112 118, 88 176" fill="none" stroke="#d6c8aa" stroke-width="24"/>
-            <path d="M 52 30 C 92 62, 112 118, 88 176" fill="none" stroke="#8d7f68" stroke-width="24" stroke-dasharray="1.5 7" opacity=".55"/>
-            <path d="M 40 36 C 80 68, 100 122, 76 180 M 64 24 C 104 56, 124 112, 100 172" fill="none" stroke="#6f6350" stroke-width="1.4" opacity=".7"/>
-            <ellipse cx="126" cy="70" rx="12" ry="10" fill="#aaa1ab" stroke="#4a3f52" stroke-width="1.4"/>
-            <circle cx="122" cy="72" r="3" fill="#3a2f44"/>
-            <ellipse cx="146" cy="96" rx="8" ry="6" fill="#c9a0a4" stroke="#5a4350" stroke-width="1.2"/>
-            <circle cx="132" cy="120" r="15" fill="#5f7f2e"/><circle cx="144" cy="112" r="11" fill="#7f9c3c"/><circle cx="122" cy="128" r="10" fill="#6e8e33"/><circle cx="140" cy="130" r="9" fill="#587528"/>
-            <circle cx="150" cy="78" r="9" fill="#d3c04a"/><circle cx="142" cy="66" r="7" fill="#c2b03e"/>
-            <circle cx="44" cy="112" r="10" fill="#274a22"/><circle cx="50" cy="106" r="7" fill="#35602b"/>
-          </g>
-          <circle cx="100" cy="100" r="60" fill="url(#shade)"/>
-          <circle cx="100" cy="100" r="60" fill="none" stroke="#2c2040" stroke-width="1.5" opacity=".6"/>
-          <g transform="rotate(-22 100 100)">
-            <path id="orbit-front" d="M 8 100 A 92 36 0 0 0 192 100" fill="none" stroke="#fff3d6" stroke-opacity=".9" stroke-width="1.6"/>
-            <circle r="3" fill="#fff"><animateMotion dur="9s" repeatCount="indefinite" path="M 192 100 A 92 36 0 1 1 8 100 A 92 36 0 1 1 192 100"/></circle>
-          </g>
-        </svg>
-      </div>
+      <div class="cosmos" aria-hidden="true"></div>
       <div class="hero-copy">
         <div class="dino skip-game reveal">
           <canvas id="skip-canvas" width="480" height="230" tabindex="0" role="img" aria-label="Rock skipping game. Press space or tap to throw a stone across the lake and see how many times it skips, up to ten."></canvas>
         </div>
         <p class="visually-hidden" id="skip-live" aria-live="polite"></p>
 
-        <p class="eyebrow reveal"><span class="eyebrow-dot"></span> DATA SCIENCE <span class="eyebrow-cross">×</span> PSYCHOLOGY <span class="eyebrow-place">WELLINGTON, NZ</span></p>
 
         <div class="portrait-row reveal">
           <figure class="hero-portrait" aria-label="Portrait of Ayush Prasad">
           <img src="assets/ayush.jpg" alt="Ayush Prasad">
           <div class="writer"><canvas id="writer-canvas" width="240" height="74" role="img" aria-label="A little stick figure writing: Photo taken by Anjola"></canvas></div>
-          <figcaption class="portrait-tag"><span class="portrait-dot"></span> AYUSH, IRL</figcaption>
         </figure>
           <div class="portrait-side">
             <div class="dino">
@@ -107,7 +65,7 @@
         </div>
 
         <p class="hero-intro reveal">
-          I'm <strong>Ayush</strong>. A Data Science and Psychology student at Victoria University of Wellington. I work mostly in Python, R and SQL, pulling patterns out of messy datasets and trying to figure out the human questions sitting underneath the numbers. Half analytical, half curious, all of it still a work in progress.
+          I'm <strong>Ayush</strong>. Welcome to my websiite, I'm A Data Science and Psychology student at Victoria University of Wellington. I work mostly in Python, R and SQL, pulling patterns out of messy datasets and trying to figure out the human questions sitting underneath the numbers. 
         </p>
 
         <div class="hero-actions reveal">
@@ -145,29 +103,29 @@
       </div>
 
       <div class="hero-art-wrap tilt" aria-label="Painted scene of colourful buildings under a swirling sky">
-        <div class="art-topline"><span>FIELD NOTES / 001</span><span>AN OPEN CURIOSITY</span></div>
         <img class="hero-art" src="assets/buildings-clouds.jpg" alt="A painted scene of colourful pink, orange, yellow and purple buildings lining a cobblestone street under a blue sky with a large swirling spiral cloud">
         <div class="swirl-layer swirl-outer" aria-hidden="true"><img src="assets/buildings-clouds.jpg" alt=""></div>
         <div class="swirl-layer swirl-inner" aria-hidden="true"><img src="assets/buildings-clouds.jpg" alt=""></div>
-        <p class="art-caption">A LITTLE SPACE TO EXPLORE <span>✳</span></p>
       </div>
     </section>
 
     <section class="projects-section" id="projects" aria-labelledby="projects-title">
-      <div class="section-topline reveal">
-        <p class="eyebrow"><span class="eyebrow-dot"></span> A FEW THINGS I'VE BEEN WORKING ON</p>
-        <span class="section-index">SELECTED WORK&nbsp; / &nbsp;01—02</span>
-      </div>
+      <canvas class="pixel-scene" aria-hidden="true"></canvas>
 
       <div class="projects-heading-row reveal">
-        <h2 id="projects-title">Selected <em>projects.</em></h2>
-        <p>Small questions, real datasets, and a slowly growing set of tools. I share everything I work on over on GitHub.</p>
+        <div class="fire-heading" id="fire-heading">
+          <div class="fh-clip" title="Click to replay">
+            <canvas class="fh-scene" aria-hidden="true"></canvas>
+            <img src="assets/fire-heading-first.png" alt="Pixel-art clip: a ninja breathes a red fireball">
+            <canvas class="fh-burn" aria-hidden="true"></canvas>
+            <h2 id="projects-title" class="fh-title"><span class="fh-inner"><span class="fh-text">My Projects</span></span></h2>
+          </div>
+        </div>
       </div>
 
       <div class="project-grid">
         <article class="project-card project-card-bike reveal tilt-card" data-tags="python pandas statsmodels regression statistical modelling">
           <a class="project-visual visual-bike" href="https://github.com/Ayush134vbt/bike_sharing_demand_analysis" target="_blank" rel="noopener noreferrer" aria-label="Open Bike Sharing Demand Analysis GitHub repository">
-            <span class="project-number">01 / PYTHON</span>
             <img src="assets/bike-illustration.svg" alt="A simple line chart titled Daily Bike Demand, trending upward with data points">
             <span class="visual-arrow" aria-hidden="true">↗</span>
           </a>
@@ -177,19 +135,16 @@
                 <p class="project-kicker">DATA EXPLORATION & MODELLING</p>
                 <h3>Bike Sharing<br>Demand Analysis</h3>
               </div>
-              <span class="project-index">01</span>
             </div>
             <p class="project-description">What drives hourly bike rentals in Washington, DC? Using two years of Capital Bikeshare data, I found commuter peaks at 8 AM and 5–6 PM and a moderate link with temperature (r = 0.40). I then compared linear, Poisson and negative binomial regression on a held-out later period. All three beat the baseline, with Poisson cutting MAE by about 39%. The diagnostics showed strong autocorrelation the models missed.</p>
             <ul class="tech-list" aria-label="Technologies used">
               <li>Python</li><li>pandas</li><li>statsmodels</li><li>Regression</li>
             </ul>
-            <a class="repo-link" href="https://github.com/Ayush134vbt/bike_sharing_demand_analysis" target="_blank" rel="noopener noreferrer">View GitHub repository <span aria-hidden="true">↗</span></a>
           </div>
         </article>
 
         <article class="project-card project-card-sql reveal tilt-card" data-tags="sql postgresql window functions power bi">
           <a class="project-visual visual-sql" href="https://github.com/Ayush134vbt/ecommerce_sql_analysis" target="_blank" rel="noopener noreferrer" aria-label="Open E-commerce SQL Analysis GitHub repository">
-            <span class="project-number">02 / SQL</span>
             <img src="assets/sql-illustration.svg" alt="Three linked database tables for customers, products and orders beside a SQL query joining them">
             <span class="visual-arrow" aria-hidden="true">↗</span>
           </a>
@@ -199,23 +154,16 @@
                 <p class="project-kicker">BUSINESS & DATA ANALYSIS</p>
                 <h3>E-commerce<br>SQL Analysis</h3>
               </div>
-              <span class="project-index">02</span>
             </div>
             <p class="project-description">About 100,000 Olist orders from Brazilian online retailers, analysed in PostgreSQL and summarised in a three-page Power BI dashboard. I checked data quality, then measured sales, customers, products and delivery. It showed 13.2M in delivered product revenue, about 97% of customers ordering only once, and an 8.1% late-delivery rate concentrated in the north-east.</p>
             <ul class="tech-list" aria-label="Technologies used">
               <li>PostgreSQL</li><li>Window functions</li><li>Power BI</li>
             </ul>
-            <a class="repo-link" href="https://github.com/Ayush134vbt/ecommerce_sql_analysis" target="_blank" rel="noopener noreferrer">View GitHub repository <span aria-hidden="true">↗</span></a>
           </div>
         </article>
       </div>
 
       <p class="filter-status" id="filter-status" role="status" aria-live="polite" hidden></p>
-      <div class="projects-bottom reveal">
-        <span class="bottom-star" aria-hidden="true">✳</span>
-        <p>More questions to explore. More projects to come.</p>
-        <a class="magnetic" href="https://github.com/Ayush134vbt" target="_blank" rel="noopener noreferrer">Find me on GitHub ↗</a>
-      </div>
     </section>
   </main>
 
