@@ -13,11 +13,15 @@ A responsive two-section portfolio website built with plain HTML, CSS and JavaSc
   - Hero portrait: rounded-square photo with a coral drop shadow and "AYUSH, IRL" sticker tag.
   - Project illustrations: custom SVGs for the bike-demand chart and the linked SQL tables.
 - **Rock-skipping game (canvas):** a hand-drawn, pen-and-ink scene in the style of a newspaper cartoon, set in a dusty, WALL-E-like wasteland with a small orange robot who throws stones across a murky lake. Click or press Space to throw; it skips 1–10 times, shows a result bubble and remembers your best score in `localStorage`. The lettering uses the Patrick Hand font.
+- **Dragon ball intro (canvas):** the site opens with a short pixel-art animation: seven dragon balls drop in, glow, spiral together and flash into the page. Click or press any key to skip. It plays once per browser session (`sessionStorage`) and is skipped for visitors with reduced motion.
+- **Cosmic hero background:** a smoggy purple-to-orange sky with fiery clouds (SVG turbulence filters), a glowing sun, lens flares, film grain, twinkling stars (canvas) and a small floating planet with an orbiting dot. The text blocks sit on cream cards so they stay readable.
+- **Header scene (canvas):** the top bar is a night sky with a big orange moon, scrolling mountain ridges and kid Goku flying across on the Nimbus cloud. The nav links are cream on top of it.
 - **Stick figure writer (canvas):** a small stick figure walks along and writes "Photo taken by Anjola" next to the portrait, then waves. Hover to replay.
 - **Dino runner (canvas):** a small endless-runner game; press Space, Up Arrow or tap to jump.
 - **Interactive layer:**
   - Custom follow cursor with hover growth on interactive elements.
   - Scroll-triggered reveals for the hero copy, skills, and project cards.
+  - Project banners keep their artwork's proportions on phones and tablets (no cropping).
   - Subtle 3D tilt on the hero art and project cards when the mouse moves across them.
   - Chip, button and card hover: translate up-left with a growing drop shadow.
   - Magnetic effect on the primary CTA, the GitHub pill in the nav, and the GitHub footer link.
