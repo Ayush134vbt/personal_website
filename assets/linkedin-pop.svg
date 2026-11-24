@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 301 168">
+<defs>
+<pattern id="blue" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="4.5" cy="4.5" r="2.4" fill="#2b8fd9"/></pattern>
+<pattern id="yel" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="4.5" cy="4.5" r="2.4" fill="#ffc928"/></pattern>
+<linearGradient id="fade" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#000"/></linearGradient>
+<mask id="mb"><rect width="301" height="168" fill="url(#fade)" transform="scale(-1 1) translate(-301 0)"/></mask>
+<mask id="my"><rect width="301" height="168" fill="url(#fade)"/></mask>
+</defs>
+<rect width="301" height="168" fill="#fbf7ee"/>
+<rect width="301" height="168" fill="url(#blue)" mask="url(#my)"/>
+<rect width="301" height="168" fill="url(#yel)" mask="url(#mb)"/>
+<!-- starburst -->
+<polygon fill="#ffd93b" stroke="#111" stroke-width="4" stroke-linejoin="round" points="150,6 170,38 204,14 206,52 246,44 228,80 276,92 230,106 252,142 208,130 196,164 168,134 140,160 130,128 92,150 100,112 52,112 86,84 40,62 90,58 78,22 120,42"/>
+<!-- offset shadow + badge -->
+<rect x="118" y="52" width="76" height="76" rx="14" fill="#111" transform="rotate(-8 156 90) translate(6 7)"/>
+<rect x="118" y="52" width="76" height="76" rx="14" fill="#0a8dd6" stroke="#111" stroke-width="5" transform="rotate(-8 156 90)"/>
+<text x="156" y="113" text-anchor="middle" font-family="Arial Black, Helvetica Neue, Arial, sans-serif" font-weight="900" font-style="italic" font-size="56" fill="#fff" stroke="#111" stroke-width="1.5" transform="rotate(-8 156 90)">in</text>
+</svg>

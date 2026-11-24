@@ -392,10 +392,146 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 .fh-scene { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; image-rendering: pixelated; pointer-events: none; }
 
 /* ---------- Home background: night sky with clouds (assets/hero-clouds.jpg) ---------- */
-.cosmos { background: #012245 url("assets/hero-clouds.jpg") center bottom / cover no-repeat; }
+/* sized by height and tiled sideways (the tile is the art + its mirror, so the seams match) so the clouds aren't blown up on wide screens */
+.cosmos { background: #012245 url("assets/hero-clouds-tile.jpg") center bottom / auto 100% repeat-x; }
 .cosmos::after { display: none; }
 .hero .text-link { color: #f6efdd; border-bottom-color: #f6efdd; }
 .hero .text-link span { color: var(--yellow); }
 
 /* portrait without the coral 3D shadow */
 .hero-portrait, .hero-portrait:hover, .hero-portrait:active { box-shadow: none; }
+
+/* ---------- Intro as a speech bubble beside the portrait ---------- */
+.portrait-row { align-items: flex-start; }
+.portrait-side { flex: 1 1 280px; max-width: 480px; gap: 26px; }
+.hero-copy .hero-intro.speech-bubble { position: relative; max-width: none; margin: 0; border-radius: 22px; }
+.speech-bubble::before, .speech-bubble::after { content: ''; position: absolute; top: 34px; border: 12px solid transparent; }
+.speech-bubble::before { right: 100%; border-right-color: var(--ink); border-width: 12px 16px 12px 0; margin-right: 0; }
+.speech-bubble::after { right: calc(100% - 3px); top: 36px; border-width: 10px 13px 10px 0; border-right-color: var(--paper); }
+@media (max-width: 700px) {
+  .speech-bubble::before, .speech-bubble::after { top: auto; right: auto; left: 40px; }
+  .speech-bubble::before { bottom: 100%; border-width: 0 12px 16px 12px; border-color: transparent transparent var(--ink); }
+  .speech-bubble::after { bottom: calc(100% - 3px); top: auto; border-width: 0 10px 13px 10px; border-color: transparent transparent var(--paper); }
+}
+@media (min-width: 701px) {
+  .portrait-row { flex-wrap: nowrap; gap: clamp(30px, 3.4vw, 48px); }
+  .portrait-row .hero-portrait { flex: none; }
+  .portrait-side { flex: 1 1 0; max-width: 440px; }
+  .writer { left: calc(100% + 14px); }
+}
+@media (min-width: 701px) {
+  .portrait-row { gap: 58px; }
+  .portrait-row .hero-portrait { width: clamp(170px, 17vw, 225px); }
+  .portrait-side { max-width: none; }
+  .hero-copy .hero-intro.speech-bubble { font-size: clamp(13px, 1.05vw, 16px); line-height: 1.65; padding: 14px 18px; }
+}
+
+/* ---------- Intro written in a cloud ---------- */
+.dino-game { max-width: 420px; }
+.hero-copy .hero-intro.cloud-bubble {
+  --b: 14px;               /* how far the puffs stick out */
+  position: relative; margin: 0; max-width: none; border: 0; border-radius: 0; box-shadow: none;
+  padding: 36px 40px; color: #3d3846;
+  background:
+    linear-gradient(var(--paper), var(--paper)) center / calc(100% - 2 * var(--b)) calc(100% - 2 * var(--b)) no-repeat,
+    radial-gradient(ellipse 26px 26px at 50% 100%, var(--paper) 97%, transparent 100%) top / 52px calc(var(--b) * 2) space no-repeat,
+    radial-gradient(ellipse 26px 26px at 50% 0, var(--paper) 97%, transparent 100%) bottom / 52px calc(var(--b) * 2) space no-repeat,
+    radial-gradient(ellipse 26px 26px at 100% 50%, var(--paper) 97%, transparent 100%) left / calc(var(--b) * 2) 52px no-repeat space,
+    radial-gradient(ellipse 26px 26px at 0 50%, var(--paper) 97%, transparent 100%) right / calc(var(--b) * 2) 52px no-repeat space;
+  background-repeat: no-repeat, space no-repeat, space no-repeat, no-repeat space, no-repeat space;
+  filter: drop-shadow(2px 0 0 var(--ink)) drop-shadow(-2px 0 0 var(--ink)) drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 -2px 0 var(--ink)) drop-shadow(5px 6px 0 rgba(10, 8, 30, .45));
+}
+/* little thought-puffs trailing toward the photo */
+.cloud-bubble::before, .cloud-bubble::after { content: ''; position: absolute; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); }
+.cloud-bubble::before { width: 16px; height: 16px; right: calc(100% - 4px); top: 44px; }
+.cloud-bubble::after { width: 9px; height: 9px; right: calc(100% + 10px); top: 62px; }
+@media (max-width: 700px) {
+  .cloud-bubble::before { right: auto; left: 46px; top: auto; bottom: calc(100% - 6px); }
+  .cloud-bubble::after { right: auto; left: 38px; top: auto; bottom: calc(100% + 8px); }
+}
+.hero-copy .hero-intro.cloud-bubble { padding: 30px 30px; font-size: clamp(13px, 1vw, 15px); line-height: 1.6; }
+@media (min-width: 701px) { .portrait-row { gap: 50px; } .portrait-row .hero-portrait { width: clamp(160px, 15vw, 205px); } }
+
+/* ---------- Contact links live in the header, top right ---------- */
+.header-contact { gap: 12px; flex-wrap: nowrap; }
+.header-contact .contact-link { white-space: nowrap; }
+@media (max-width: 700px) { .header-contact { gap: 8px; } .header-contact .contact-icon + .contact-text:not(:has(.arrow)) { display: none; } .header-contact .contact-link { padding: 5px; } .header-contact .contact-text { display: none; } }
+
+/* bigger portrait, cloud closer, credit nudged down clear of the cloud */
+@media (min-width: 701px) {
+  .portrait-row { gap: 34px; }
+  .portrait-row .hero-portrait { width: clamp(190px, 19vw, 250px); }
+  .writer { bottom: -30px; }
+}
+
+/* cloud sits beside the portrait, vertically centred on it */
+@media (min-width: 701px) {
+  .portrait-row { align-items: center; }
+  .portrait-side { justify-content: center; }
+}
+@media (min-width: 701px) { .portrait-side { margin-left: -50px; } }
+
+/* ---------- Comic cloud bubble (white puffs, inked outline, halftone shadow, curly tail) ---------- */
+.hero-copy .hero-intro.cloud-bubble {
+  background: url("assets/cloud-bubble.svg") center / 100% 100% no-repeat; filter: none;
+  aspect-ratio: 440 / 360; padding: 15% 13% 21% 14%; font-size: 13px; line-height: 1.5; color: #1a1822;
+  display: flex; align-items: center;
+}
+.cloud-bubble::before, .cloud-bubble::after { display: none; }
+@media (min-width: 701px) { .portrait-side { margin-left: -28px; } }
+@media (max-width: 700px) {
+  .hero-copy .hero-intro.cloud-bubble { background-image: url("assets/cloud-bubble-top.svg"); padding: 21% 13% 15% 14%; font-size: 14px; margin-top: 18px; }
+}
+.hero-copy .hero-intro.cloud-bubble { display: block; }
+.hero-copy .hero-intro.cloud-bubble { padding: 18% 14% 23% 21%; }
+@media (min-width: 701px) {
+  .portrait-side { flex: 0 0 clamp(330px, 29vw, 400px); margin-right: -120px; }
+}
+@media (max-width: 700px) { .hero-copy .hero-intro.cloud-bubble { padding: 24% 14% 17% 18%; } }
+.hero-copy .hero-intro.cloud-bubble { display: flex; align-items: center; }
+@media (min-width: 701px) {
+  .portrait-side { flex: 0 0 clamp(320px, 25vw, 360px); margin-right: 0; }
+  .hero-copy .hero-intro.cloud-bubble { font-size: 12.5px; padding: 15% 12% 22% 19%; }
+}
+.hero-copy .hero-intro.cloud-bubble { padding-left: 21%; }
+/* medium screens: not enough width beside the photo, so the cloud drops below it (tail points up) */
+@media (min-width: 701px) and (max-width: 1250px) {
+  .portrait-row { flex-wrap: wrap; row-gap: 22px; }
+  .portrait-side { flex: 0 0 min(100%, 360px); margin-left: 0; }
+  .hero-copy .hero-intro.cloud-bubble { background-image: url("assets/cloud-bubble-top.svg"); padding: 22% 12% 16% 18%; }
+}
+@media (min-width: 1251px) {
+  .portrait-side { margin-left: -52px; }
+  .hero-copy .hero-intro.cloud-bubble { padding: 15% 15% 22% 23%; }
+}
+@media (min-width: 1251px) { .portrait-side { position: relative; top: -40px; } }
+
+/* email link is the pop-art mailbox picture */
+.contact-mail { display: block; line-height: 0; border: 2px solid var(--ink); border-radius: var(--r-md); box-shadow: 3px 3px 0 var(--ink); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+.contact-mail img { display: block; height: 50px; width: auto; }
+.contact-mail:hover { transform: translate(-2px, -2px) rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+.contact-mail:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+@media (max-width: 700px) { .contact-mail img { height: 38px; } }
+
+/* portrait starts right at the left edge of the page */
+.portrait-row .hero-portrait { margin-left: calc(-1 * clamp(26px, 6vw, 92px)); }
+@media (max-width: 700px) { .portrait-row .hero-portrait { margin-left: -24px; } }
+
+/* bigger portrait that runs up to the top of the hero, just under the header */
+@media (min-width: 701px) {
+  .hero-copy { justify-content: flex-start; }
+  .portrait-row .hero-portrait { width: clamp(230px, 22vw, 310px); margin-top: calc(-1 * clamp(48px, 6vw, 92px)); border-top-width: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+  .portrait-row .hero-portrait img { border-top-left-radius: 0; border-top-right-radius: 0; }
+}
+
+/* no left border or rounded left corners: the photo runs straight off the page edge */
+.portrait-row .hero-portrait { border-left-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.portrait-row .hero-portrait img { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+@media (min-width: 1251px) { .portrait-side { top: -160px; } }
+@media (min-width: 1251px) { .portrait-side { top: -122px; } }
+
+/* comic-book lettering for the speech bubble */
+.hero-copy .hero-intro.cloud-bubble { font-family: 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', cursive; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13.5px; line-height: 1.3; text-align: center; color: #15131c; }
+.hero-copy .hero-intro.cloud-bubble strong { font-weight: 700; color: #d6262c; }
+@media (max-width: 700px) { .hero-copy .hero-intro.cloud-bubble { font-size: 15px; } }
+@media (min-width: 1251px) { .portrait-side { top: -137px; } }
