@@ -1018,3 +1018,137 @@ if (artWrap && artImg) {
   canvas.addEventListener('pointerenter', () => { if (!reduce && visible && performance.now() - t0 > total + 600) play(); });
   canvas.addEventListener('pointerdown', () => { if (!reduce && visible && performance.now() - t0 > total + 600) play(); });
 })();
+
+
+// ===== Dragon ball intro =====
+(() => {
+  const intro = document.querySelector('#intro');
+  const canvas = document.querySelector('#intro-canvas');
+  const root = document.documentElement;
+  if (!intro || !canvas || !root.classList.contains('intro-on')) return;
+  const ctx = canvas.getContext('2d');
+  const S = 3;                                             // screen px per "pixel", for the retro look
+  const w = Math.ceil(window.innerWidth / S), h = Math.ceil(window.innerHeight / S);
+  canvas.width = w; canvas.height = h;
+  canvas.style.width = w * S + 'px'; canvas.style.height = h * S + 'px';   // exact multiple, so balls stay round
+  const R = Math.max(9, Math.min(16, Math.round(Math.min(w, h) * 0.075)));
+
+  // star layouts (unit coords inside the ball) for 1..7 stars
+  const STARS = [
+    [[0, 0]], [[-.32, -.08], [.32, .08]], [[-.38, .12], [0, -.32], [.38, .12]],
+    [[-.3, -.3], [.3, -.3], [-.3, .3], [.3, .3]], [[-.3, -.3], [.3, -.3], [0, 0], [-.3, .3], [.3, .3]],
+    [[-.4, -.28], [0, -.28], [.4, -.28], [-.4, .28], [0, .28], [.4, .28]],
+    [[-.4, -.28], [0, -.28], [.4, -.28], [-.4, .28], [0, .28], [.4, .28], [0, 0]],
+  ];
+  const PILE = [[-2.6, .9], [-.8, -1.5], [2, -2], [.6, .2], [3.4, .8], [-.9, 2.2], [1.9, 2.2]];
+  const cx0 = w / 2, cy0 = h * 0.56, K = R * 1.2;
+  const balls = PILE.map(([x, y], i) => ({ i, tx: cx0 + x * K, ty: cy0 + y * K, n: i + 1 }));
+
+  const clamp01 = (t) => Math.max(0, Math.min(1, t));
+  const easeInOut = (t) => t * t * (3 - 2 * t);
+  const easeIn = (t) => t * t;
+  const bounce = (t) => {
+    t = clamp01(t);
+    if (t < 1 / 2.75) return 7.5625 * t * t;
+    if (t < 2 / 2.75) { t -= 1.5 / 2.75; return 7.5625 * t * t + .75; }
+    if (t < 2.5 / 2.75) { t -= 2.25 / 2.75; return 7.5625 * t * t + .9375; }
+    t -= 2.625 / 2.75; return 7.5625 * t * t + .984375;
+  };
+
+  const star = (x, y, r, rot) => {
+    ctx.beginPath();
+    for (let k = 0; k < 10; k++) {
+      const a = rot - Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r;
+      ctx[k ? 'lineTo' : 'moveTo'](x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+    }
+    ctx.closePath(); ctx.fill();
+  };
+
+  const drawBall = (x, y, r, n, glow, spin) => {
+    if (glow > 0) {
+      const g = ctx.createRadialGradient(x, y, r * 0.8, x, y, r * (1.5 + glow));
+      g.addColorStop(0, `rgba(255,170,50,${0.55 * glow})`); g.addColorStop(1, 'rgba(255,140,30,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * (1.5 + glow), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.save();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip();
+    const body = ctx.createRadialGradient(x - r * .3, y - r * .3, 0, x, y, r);
+    body.addColorStop(0, '#ffb53d'); body.addColorStop(.55, '#ff7a1c'); body.addColorStop(1, '#df3f1a');
+    ctx.fillStyle = body; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    const yel = ctx.createRadialGradient(x + r * .35, y + r * .45, 0, x + r * .35, y + r * .45, r * .75);
+    yel.addColorStop(0, 'rgba(255,232,70,.9)'); yel.addColorStop(1, 'rgba(255,232,70,0)');
+    ctx.fillStyle = yel; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    ctx.fillStyle = '#d4291a';
+    STARS[n - 1].forEach(([sx, sy]) => star(x + (sx + Math.sin(spin) * 0.08) * r * 1.05, y + sy * r * 1.05, r * (n > 4 ? .2 : .25), spin * 0.2));
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(x, y, r - 0.4, 0, Math.PI * 2); ctx.strokeStyle = '#ffe3a6'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.save(); ctx.translate(x - r * .38, y - r * .46); ctx.rotate(-.6);
+    ctx.beginPath(); ctx.ellipse(0, 0, r * .3, r * .19, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.fill();
+    ctx.restore();
+  };
+
+  const T = { drop: 1300, idle: 2300, orbit: 3300, spiral: 3950, flash: 4400 };
+  let start = 0, raf = 0, finished = false;
+
+  const frame = (now) => {
+    if (!start) start = now;
+    const t = now - start;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+    const ocx = w / 2, ocy = h / 2, Ro = Math.min(w, h) * 0.3;
+
+    // faint stars in the dark
+    for (let i = 0; i < 28; i++) {
+      const sx = (i * 97) % w, sy = (i * 53) % h, tw = 0.3 + 0.3 * Math.sin(t / 400 + i);
+      ctx.fillStyle = `rgba(255,255,255,${tw * 0.5})`; ctx.fillRect(sx, sy, 1, 1);
+    }
+
+    balls.forEach((b) => {
+      let x = b.tx, y = b.ty, glow = 0, scale = 1;
+      const spin = t / 300 + b.i;
+      if (t < T.drop) {
+        const u = (t - b.i * 110) / 650;
+        if (u <= 0) return;
+        y = -R * 2 + (b.ty + R * 2) * bounce(u);
+      } else if (t < T.idle) {
+        glow = 0.5 + 0.35 * Math.sin((t - T.drop) / 120 + b.i);
+        y = b.ty + Math.sin(t / 260 + b.i) * 1.2;
+      } else {
+        const u = easeInOut(clamp01((t - T.idle) / (T.orbit - T.idle)));
+        const rot = ((t - T.idle) / 1000) ** 2 * 2.2 + b.i / 7 * Math.PI * 2 - Math.PI / 2;
+        let rad = Ro;
+        if (t >= T.orbit) rad = Ro * (1 - easeIn(clamp01((t - T.orbit) / (T.spiral - T.orbit))));
+        const ox = ocx + Math.cos(rot) * rad, oy = ocy + Math.sin(rot) * rad * 0.8;
+        x = b.tx + (ox - b.tx) * u; y = b.ty + (oy - b.ty) * u;
+        glow = 0.9 + 0.5 * u;
+        scale = 1 - 0.15 * u;
+      }
+      drawBall(x, y, R * scale, b.n, glow, spin);
+    });
+
+    // flash
+    if (t >= T.spiral) {
+      const u = clamp01((t - T.spiral) / (T.flash - T.spiral));
+      const rr = u * Math.max(w, h);
+      const g = ctx.createRadialGradient(ocx, ocy, 0, ocx, ocy, Math.max(1, rr));
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.6, `rgba(255,214,120,${0.9})`); g.addColorStop(1, 'rgba(255,160,40,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = `rgba(255,255,255,${easeIn(u)})`; ctx.fillRect(0, 0, w, h);
+    }
+    if (t >= T.flash) { finish(); return; }
+    raf = requestAnimationFrame(frame);
+  };
+
+  const finish = (e) => {
+    if (finished) return; finished = true;
+    const skipped = !!(e && e.type);
+    cancelAnimationFrame(raf);
+    try { sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
+    if (!skipped) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }   // end on white, then fade into the site
+    intro.classList.add('out');
+    setTimeout(() => { root.classList.remove('intro-on'); intro.remove(); }, 700);
+  };
+
+  intro.addEventListener('pointerdown', finish);
+  window.addEventListener('keydown', finish, { once: true });
+  raf = requestAnimationFrame(frame);
+})();

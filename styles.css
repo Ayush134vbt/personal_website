@@ -308,3 +308,12 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 
 /* ---------- Rock skipping game ---------- */
 .skip-game { max-width: 560px; }
+
+/* ---------- Dragon ball intro ---------- */
+#intro { display: none; position: fixed; inset: 0; z-index: 9999; background: #000; transition: opacity .65s ease; cursor: pointer; }
+.intro-on #intro { display: block; }
+.intro-on body { overflow: hidden; }
+#intro.out { opacity: 0; pointer-events: none; }
+#intro { overflow: hidden; }
+#intro canvas { display: block; image-rendering: pixelated; }
+.intro-skip { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; font: 600 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .4); }
