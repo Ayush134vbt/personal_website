@@ -427,7 +427,7 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 }
 
 /* ---------- Intro written in a cloud ---------- */
-.dino-game { max-width: 420px; }
+.dino-game { max-width: 560px; }
 .hero-copy .hero-intro.cloud-bubble {
   --b: 14px;               /* how far the puffs stick out */
   position: relative; margin: 0; max-width: none; border: 0; border-radius: 0; box-shadow: none;
@@ -535,3 +535,22 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 .hero-copy .hero-intro.cloud-bubble strong { font-weight: 700; color: #d6262c; }
 @media (max-width: 700px) { .hero-copy .hero-intro.cloud-bubble { font-size: 15px; } }
 @media (min-width: 1251px) { .portrait-side { top: -137px; } }
+
+/* roomier cloud so the lettering sits comfortably inside the puffs */
+@media (min-width: 1251px) {
+  .portrait-side { flex: 0 0 clamp(380px, 30vw, 450px); }
+  .hero-copy .hero-intro.cloud-bubble { font-size: 14px; padding: 16% 13% 23% 21%; }
+}
+@media (min-width: 1251px) {
+  .hero-copy .hero-intro.cloud-bubble { font-size: 15px; padding: 15% 12% 21% 20%; }
+  .portrait-side { top: -146px; }
+}
+@media (min-width: 1251px) { .hero-copy .hero-intro.cloud-bubble { padding: 17% 10% 20% 23%; font-size: 14.5px; } }
+@media (min-width: 1251px) { .hero-copy .hero-intro.cloud-bubble { padding: 17% 17% 20% 16%; font-size: 14px; } }
+@media (min-width: 1251px) { .portrait-side { top: -116px; } }
+
+/* games: keep the dark offset shadow, drop the pink one */
+.dino { box-shadow: 4px 4px 0 var(--ink); }
+.dino:hover { box-shadow: 6px 6px 0 var(--ink); }
+.dino:active { box-shadow: 2px 2px 0 var(--ink); }
+@media (min-width: 701px) { .writer { bottom: 0; } }
