@@ -1220,6 +1220,7 @@ if (artWrap && artImg) {
   const layout = () => {
     const c = clip.getBoundingClientRect();
     if (!c.width) return;
+    clip.style.setProperty('--fh-h', c.height + 'px');   // lets the CSS place the title just past the clip
     U = Math.max(3, Math.round(c.height / 335 * 4));
     w = Math.ceil(c.width / U); h = Math.ceil(c.height / U);
     canvas.width = w; canvas.height = h;
@@ -1227,7 +1228,8 @@ if (artWrap && artImg) {
     const x = Math.floor((r.left - c.left) / U) - 3, y = Math.floor((r.top - c.top) / U) - 2;
     paper = { x, y, pw: Math.ceil(r.width / U) + 6, ph: Math.ceil(r.height / U) + 4 };
     seed = 11; noise = Float32Array.from({ length: paper.pw * paper.ph }, () => rnd());
-    src = { x: (g.right - c.left) / U - 3, y: (g.top - c.top + g.height * 0.5) / U };
+    // flames leave from the clip's right edge, or from the title's left edge when the title starts inside the clip
+    src = { x: Math.min(g.right - c.left, r.left - c.left) / U - 3, y: (g.top - c.top + g.height * 0.5) / U };
   };
 
   // the scroll, partly burnt: p runs from 0 (untouched) past 1 (gone); cells burn left to right with a ragged edge

@@ -554,3 +554,32 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 .dino:hover { box-shadow: 6px 6px 0 var(--ink); }
 .dino:active { box-shadow: 2px 2px 0 var(--ink); }
 @media (min-width: 701px) { .writer { bottom: 0; } }
+
+/* ---------- Sasuke banner lives in the hero, filling the rest of the column edge to edge ---------- */
+.hero-copy .projects-heading-row { align-self: stretch; flex: 1 1 auto; display: flex; margin: 0 calc(-1 * clamp(26px, 6vw, 92px)) calc(-1 * clamp(48px, 6vw, 92px)); }
+.hero-copy .fire-heading { --bh: clamp(260px, 24vw, 380px); flex: 1 1 auto; display: flex; flex-direction: column; margin: 0; }
+.hero-copy .fh-clip { flex: 1 1 auto; height: auto; min-height: var(--bh); background: #fcfcfc; border-top: 2px solid var(--ink); }
+/* Sasuke on the left with no ground or village behind him; "MY PROJECTS" right beside him, sized to fit the space left */
+.hero-copy .fh-scene { display: none; }
+.hero-copy .fh-clip img { left: 0; transform: none; -webkit-mask-image: none; mask-image: none; }
+/* --fh-h (the banner's height) is set by script.js; the clip is 1.134x as wide as it is tall and Sasuke fills its left ~60%.
+   The title is centred in the space to his right. */
+.hero-copy .projects-heading-row .fh-title { left: calc(var(--fh-h, 340px) * .68); right: 2%; top: 0; bottom: 30%; justify-content: center; flex-wrap: nowrap;
+  font-size: max(12px, min(calc((100cqw - var(--fh-h, 340px) * .68 - 40px) / 12.5), calc(var(--fh-h, 340px) * .11))); }
+@media (max-width: 700px) {
+  .hero-copy .projects-heading-row { margin: 0 -24px -45px; }
+  .hero-copy .fire-heading { margin: 0; }
+}
+
+/* ---------- Games sit at the bottom of the page ---------- */
+.games-section { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(20px, 3vw, 40px); padding: clamp(48px, 6vw, 80px) clamp(24px, 6vw, 92px); background: #012245; border-top: 1.5px solid var(--ink); }
+.games-section .dino { flex: 1 1 380px; }
+@media (max-width: 700px) { .games-section { padding: 40px 20px; } }
+
+/* ---------- Banner runs straight into the projects: no dividing line, no empty strip ---------- */
+.hero { border-bottom: 0; }
+.projects-section { padding-top: clamp(16px, 2vw, 28px); }
+@media (max-width: 700px) { .projects-section { padding-top: 16px; } }
+
+/* ---------- Games title: pixel lettering, centred above the two games ---------- */
+.games-title { flex: 0 0 100%; margin: 0 0 clamp(4px, 1vw, 12px); text-align: center; font: 400 clamp(16px, 2.6vw, 34px)/1.4 'Press Start 2P', monospace; text-transform: uppercase; color: var(--paper); text-shadow: .12em .12em 0 var(--coral); -webkit-font-smoothing: none; }

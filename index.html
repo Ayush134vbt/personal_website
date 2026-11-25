@@ -51,14 +51,16 @@
           </div>
         </div>
 
-        <div class="dino dino-game reveal">
-          <canvas id="dino-canvas" width="400" height="110" tabindex="0" role="img" aria-label="Small endless-runner game. Press space, up arrow, or tap to make the dinosaur jump over cacti."></canvas>
+        <div class="projects-heading-row reveal">
+          <div class="fire-heading" id="fire-heading">
+            <div class="fh-clip" title="Click to replay">
+              <canvas class="fh-scene" aria-hidden="true"></canvas>
+              <img src="assets/fire-heading-first.png" alt="Pixel-art clip: a ninja breathes a red fireball">
+              <canvas class="fh-burn" aria-hidden="true"></canvas>
+              <h2 id="projects-title" class="fh-title"><span class="fh-inner"><span class="fh-text">My Projects</span></span></h2>
+            </div>
+          </div>
         </div>
-
-        <div class="dino skip-game reveal">
-          <canvas id="skip-canvas" width="480" height="230" tabindex="0" role="img" aria-label="Rock skipping game. Press space or tap to throw a stone across the lake and see how many times it skips, up to ten."></canvas>
-        </div>
-        <p class="visually-hidden" id="skip-live" aria-live="polite"></p>
       </div>
 
       <div class="hero-art-wrap tilt" aria-label="Painted scene of colourful buildings under a swirling sky">
@@ -68,19 +70,8 @@
       </div>
     </section>
 
-    <section class="projects-section" id="projects" aria-labelledby="projects-title">
+    <section class="projects-section" id="projects" aria-label="My projects">
       <canvas class="pixel-scene" aria-hidden="true"></canvas>
-
-      <div class="projects-heading-row reveal">
-        <div class="fire-heading" id="fire-heading">
-          <div class="fh-clip" title="Click to replay">
-            <canvas class="fh-scene" aria-hidden="true"></canvas>
-            <img src="assets/fire-heading-first.png" alt="Pixel-art clip: a ninja breathes a red fireball">
-            <canvas class="fh-burn" aria-hidden="true"></canvas>
-            <h2 id="projects-title" class="fh-title"><span class="fh-inner"><span class="fh-text">My Projects</span></span></h2>
-          </div>
-        </div>
-      </div>
 
       <div class="project-grid">
         <article class="project-card project-card-bike reveal tilt-card" data-tags="python pandas statsmodels regression statistical modelling">
@@ -124,14 +115,19 @@
 
       <p class="filter-status" id="filter-status" role="status" aria-live="polite" hidden></p>
     </section>
+    <section class="games-section" id="games" aria-labelledby="games-title">
+      <h2 class="games-title" id="games-title">Games if you're bored</h2>
+      <div class="dino dino-game reveal">
+        <canvas id="dino-canvas" width="384" height="184" tabindex="0" role="img" aria-label="Small endless-runner game. Press space, up arrow, or tap to make the dinosaur jump over cacti."></canvas>
+      </div>
+
+      <div class="dino skip-game reveal">
+        <canvas id="skip-canvas" width="480" height="230" tabindex="0" role="img" aria-label="Rock skipping game. Press space or tap to throw a stone across the lake and see how many times it skips, up to ten."></canvas>
+      </div>
+      <p class="visually-hidden" id="skip-live" aria-live="polite"></p>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <a class="footer-brand" href="#home">AYUSH<span>.</span></a>
-    <p>DATA SCIENCE × PSYCHOLOGY</p>
-    <a href="#home">Back to top ↑</a>
-    <span class="footer-year">© <span id="year">2026</span></span>
-  </footer>
 
 </body>
 </html>
