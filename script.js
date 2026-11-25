@@ -1204,221 +1204,95 @@ if (artWrap && artImg) {
   if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
 })();
 
-// ===== Projects heading: the clip's fireball flies on, sets a paper scroll alight, and it burns away to reveal "My Projects" =====
+// ===== Featured projects carousel: one card at a time, arrows, dots, arrow keys and swipe =====
 (() => {
-  const box = document.querySelector('#fire-heading');
-  if (!box) return;
-  const clip = box.querySelector('.fh-clip'), img = clip.querySelector('img');
-  const title = clip.querySelector('.fh-inner'), canvas = clip.querySelector('.fh-burn');
-  const ctx = canvas.getContext('2d');
-  const FIRE_AT = 950;                    // the fireball reaches the clip's right edge about 1 s in (12 frames at 160 ms)
-  const TRAVEL = 380, BURN = 1500;        // flame flight to the scroll, then how long the scroll takes to burn
-  let U = 5, w = 0, h = 0, paper = null, noise = null, src = { x: 0, y: 0 };
-  let state = 'covered', t0 = 0, last = 0, raf = 0, timer = 0, played = false, parts = [];
-  let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const root = document.querySelector('.fp');
+  if (!root) return;
+  const track = root.querySelector('.fp-track');
+  const slides = Array.from(track.children);
+  const dotsBox = root.querySelector('.fp-dots');
+  const prev = root.querySelector('.fp-prev'), next = root.querySelector('.fp-next');
+  let index = 0;
 
-  const layout = () => {
-    const c = clip.getBoundingClientRect();
-    if (!c.width) return;
-    clip.style.setProperty('--fh-h', c.height + 'px');   // lets the CSS place the title just past the clip
-    U = Math.max(3, Math.round(c.height / 335 * 4));
-    w = Math.ceil(c.width / U); h = Math.ceil(c.height / U);
-    canvas.width = w; canvas.height = h;
-    const r = title.getBoundingClientRect(), g = img.getBoundingClientRect();
-    const x = Math.floor((r.left - c.left) / U) - 3, y = Math.floor((r.top - c.top) / U) - 2;
-    paper = { x, y, pw: Math.ceil(r.width / U) + 6, ph: Math.ceil(r.height / U) + 4 };
-    seed = 11; noise = Float32Array.from({ length: paper.pw * paper.ph }, () => rnd());
-    // flames leave from the clip's right edge, or from the title's left edge when the title starts inside the clip
-    src = { x: Math.min(g.right - c.left, r.left - c.left) / U - 3, y: (g.top - c.top + g.height * 0.5) / U };
-  };
-
-  // the scroll, partly burnt: p runs from 0 (untouched) past 1 (gone); cells burn left to right with a ragged edge
-  const drawPaper = (p, spawn) => {
-    const { x, y, pw, ph } = paper;
-    for (let j = 0; j < ph; j++) {
-      for (let i = 0; i < pw; i++) {
-        const n = noise[j * pw + i];
-        const thr = (i / pw) * 0.86 + n * 0.12 + Math.abs(j - ph / 2) / ph * 0.06;
-        const d = p - thr;
-        let col;
-        if (d < 0) {
-          const edge = i === 0 || j === 0 || i === pw - 1 || j === ph - 1;
-          col = edge ? '#9b927c' : (j === 1 || j === ph - 2) ? '#ddd3b8' : n > 0.94 ? '#e2d8be' : '#f1e9d3';
-          if (d > -0.035) col = '#c7a77a';                       // scorched just ahead of the flame
-        } else if (d < 0.03) col = '#2a1a12';                    // charred edge
-        else if (d < 0.085) {
-          col = ['#ffc94a', '#ff8a1e', '#ff3b1c'][Math.floor(Math.random() * 3)];
-          if (spawn && Math.random() < 0.012) parts.push({ x: x + i, y: y + j, vx: (Math.random() - 0.5) * 0.006, vy: -0.012 - Math.random() * 0.02, life: 700 + Math.random() * 600, age: 0, ember: true });
-        } else continue;                                         // burnt away: the title shows through
-        ctx.fillStyle = col; ctx.fillRect(x + i, y + j, 1, 1);
-      }
-    }
-  };
-
-  const drawParts = (dt) => {
-    parts = parts.filter((q) => (q.age += dt) < q.life);
-    parts.forEach((q) => {
-      q.x += q.vx * dt; q.y += q.vy * dt;
-      const k = q.age / q.life;
-      ctx.globalAlpha = q.ember ? 1 - k : 1 - k * 0.4;
-      ctx.fillStyle = k < 0.3 ? '#ffd65a' : k < 0.65 ? '#ff8a1e' : '#e8321c';
-      const s = q.big ? 2 : 1;
-      ctx.fillRect(Math.round(q.x), Math.round(q.y), s, s);
-    });
-    ctx.globalAlpha = 1;
-  };
-
-  const frame = (now) => {
-    raf = 0;
-    const e = now - t0, dt = Math.min(50, now - last || 16); last = now;
-    ctx.clearRect(0, 0, w, h);
-    // flames keep flying out of the clip towards the scroll
-    if (e < 560) {
-      const tx = paper.x + 1, ty = paper.y + paper.ph / 2;
-      for (let k = 0; k < 5; k++) {
-        const life = TRAVEL * (0.85 + Math.random() * 0.3);
-        parts.push({ x: src.x + Math.random() * 2, y: src.y + (Math.random() - 0.5) * 6, vx: (tx - src.x) / life, vy: (ty + (Math.random() - 0.5) * paper.ph * 0.8 - src.y) / life, life, age: 0, big: Math.random() < 0.45 });
-      }
-    }
-    const u = Math.max(0, Math.min(1, (e - TRAVEL) / BURN));
-    const p = e < TRAVEL ? -0.01 : (u * u * (3 - 2 * u)) * 1.12;
-    if (p < 1.11) drawPaper(p, true);
-    drawParts(dt);
-    if (e < TRAVEL + BURN + 200 || parts.length) raf = requestAnimationFrame(frame);
-    else { state = 'done'; ctx.clearRect(0, 0, w, h); }
-  };
-
-  const cover = () => { layout(); if (paper) { ctx.clearRect(0, 0, w, h); drawPaper(-1, false); } };
-  const ignite = () => { state = 'burning'; parts = []; t0 = last = performance.now(); if (!raf) raf = requestAnimationFrame(frame); };
-
-  const play = () => {
-    clearTimeout(timer); cancelAnimationFrame(raf); raf = 0;
-    if (prefersReducedMotion) { img.src = 'assets/fire-heading-last.png'; state = 'done'; ctx.clearRect(0, 0, w, h); return; }
-    state = 'covered'; cover();
-    const next = new Image();
-    next.onload = () => { img.src = next.src; timer = setTimeout(ignite, FIRE_AT); };
-    next.src = 'assets/fire-heading.webp?' + Date.now();
-  };
-
-  if (prefersReducedMotion) state = 'done';
-  const ready = () => { if (state === 'covered') cover(); else layout(); };
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready);
-  ready();
-  if ('ResizeObserver' in window) new ResizeObserver(() => { if (state !== 'burning') ready(); }).observe(clip);
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !played) { played = true; play(); io.disconnect(); }
-    }, { threshold: 0.45 });
-    io.observe(box);
-  } else { play(); }
-  clip.addEventListener('click', play);
-})();
-
-
-// ===== Projects background: a greyscale pixel-art scene (sky, drifting clouds, horizon, trees, pagodas, grass) =====
-(() => {
-  const canvas = document.querySelector('.pixel-scene');
-  if (!canvas) return;
-  const host = canvas.parentElement, ctx = canvas.getContext('2d');
-  const P = 6;                                            // one art pixel = 6 CSS px, close to the clip's chunky pixels
-  const PAL = { X: '#d6d6d6', x: '#c2c2c2', G: '#b3b3b3', g: '#9c9c9c', T: '#9a9a9a', R: '#a3a3a3', W: '#d2d2d2', D: '#8a8a8a', S: '#929292' };
-  const CLOUD = ['....XXXX......', '..XXXXXXXX....', '.XXXXXXXXXXX..', 'XXXXXXXXXXXXXX', '.xxxxxxxxxxxx.'];
-  const TREE = ['..GGGG..', '.GGGGGG.', 'GGGgGGGG', 'GGGGGgGG', '.GGgGGG.', '..GGGG..', '...TT...', '...TT...', '...TT...'];
-  const PAGODA = ['.......S.......', '......SSS......', '...RRRRRRRRR...', '.RRRRRRRRRRRRR.', '....WWWWWWW....', '....WDWDWDW....', '.RRRRRRRRRRRRR.', 'RRRRRRRRRRRRRRR', '..WWWWWWWWWWW..', '..WDDWWWWWDDW..', '..WWWWWDWWWWW..', '..WWWWWDWWWWW..'];
-  let w = 0, h = 0, raf = 0, visible = true, last = 0;
-  let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-  let clouds = [], props = [], specks = [];
-
-  const sprite = (rows, x, y) => {
-    rows.forEach((row, j) => { for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch !== '.') { ctx.fillStyle = PAL[ch]; ctx.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1); } } });
-  };
-
-  const build = () => {
-    w = Math.ceil(host.clientWidth / P); h = Math.ceil(host.clientHeight / P);
-    canvas.width = w; canvas.height = h;
-    seed = 7;
-    const ground = h - 14;
-    clouds = Array.from({ length: Math.max(4, Math.round(w * h / 2600)) }, () => ({ x: rnd() * (w + 30) - 15, y: 4 + rnd() * (ground - 40), sp: 0.4 + rnd() * 0.6 }));
-    props = []; let x = 2 + rnd() * 10;
-    while (x < w - 8) { const isPagoda = rnd() < 0.28; props.push({ x, kind: isPagoda ? PAGODA : TREE }); x += (isPagoda ? 15 : 8) + 6 + rnd() * 26; }
-    specks = Array.from({ length: Math.round(w / 3) }, () => ({ x: Math.floor(rnd() * w), y: ground + 3 + Math.floor(rnd() * 10), big: rnd() < 0.35 }));
-  };
-
-  const draw = (t) => {
-    ctx.fillStyle = '#fcfcfc'; ctx.fillRect(0, 0, w, h);
-    clouds.forEach((c) => sprite(CLOUD, ((c.x + t / 1000 * c.sp) % (w + 30)) - 15, c.y));
-    const ground = h - 14;
-    props.forEach((p) => sprite(p.kind, p.x, ground - p.kind.length));
-    ctx.fillStyle = '#aeaeae'; ctx.fillRect(0, ground, w, 1); ctx.fillStyle = '#c4c4c4'; ctx.fillRect(0, ground + 1, w, 1);
-    specks.forEach((s) => { ctx.fillStyle = '#a6a6a6'; ctx.fillRect(s.x, s.y, 1, 1); if (s.big) { ctx.fillRect(s.x + 1, s.y - 1, 1, 1); ctx.fillRect(s.x + 2, s.y, 1, 1); } });
-  };
-
-  const loop = (now) => {
-    raf = 0;
-    if (now - last > 180) { draw(now); last = now; }      // step slowly, like old sprite animation
-    if (visible && !document.hidden && !prefersReducedMotion) raf = requestAnimationFrame(loop);
-  };
-  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
-  build(); draw(0); if (!prefersReducedMotion) kick();
-  if ('ResizeObserver' in window) new ResizeObserver(() => { build(); draw(performance.now()); }).observe(host);
-  if ('IntersectionObserver' in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) kick(); }).observe(host);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
-})();
-
-
-// ===== Projects banner: carry the clip's village on behind the title (horizon, pagodas, houses, trees, grass) =====
-(() => {
-  const clip = document.querySelector('.fh-clip');
-  const canvas = clip && clip.querySelector('.fh-scene');
-  if (!canvas) return;
-  const img = clip.querySelector('img'), ctx = canvas.getContext('2d');
-  const PAL = { G: '#b8b8b8', g: '#a2a2a2', T: '#a6a6a6', R: '#b0b0b0', r: '#9c9c9c', W: '#d6d6d6', D: '#a0a0a0', S: '#a8a8a8' };
-  const PAGODA = [
-    '..........S..........', '.........SSS.........', '..........S..........', '....rRRRRRRRRRRRr....', '..rRRRRRRRRRRRRRRRr..',
-    '.......WWWWWWW.......', '.......WDWWWDW.......', '.......WWWWWWW.......', '...rRRRRRRRRRRRRRr...', '.rRRRRRRRRRRRRRRRRRr.',
-    '.....WWWWWWWWWWW.....', '.....WDDWWWWWDDW.....', '.....WWWWWWWWWWW.....', '..rRRRRRRRRRRRRRRRr..', 'rRRRRRRRRRRRRRRRRRRRr',
-    '...WWWWWWWWWWWWWWW...', '...WDDWWWDDDWWWDDW...', '...WDDWWWDDDWWWDDW...', '...WWWWWWDDDWWWWWW...', '...WWWWWWDDDWWWWWW...'];
-  const TREE = ['....GGG....', '..GGGGGGG..', '.GGGGgGGGG.', 'GGGGGGGGgGG', 'GGgGGGGGGGG', 'GGGGGGgGGGG', '.GGGGGGGGG.', '..GGGgGGG..', '....GGG....', '.....T.....', '.....T.....', '.....T.....', '.....T.....'];
-  const HOUSE = ['....rRRRr....', '..rRRRRRRRr..', 'rRRRRRRRRRRRr', '.WWWWWWWWWWW.', '.WDDWWWWWDDW.', '.WDDWWDWWDDW.', '.WWWWWDWWWWW.', '.WWWWWDWWWWW.'];
-  const ORDER = [PAGODA, TREE, HOUSE, TREE, TREE, PAGODA, HOUSE, TREE, PAGODA, TREE, HOUSE, TREE];
-
-  const sprite = (rows, x, y) => rows.forEach((row, j) => {
-    for (let i = 0; i < row.length; i++) { const ch = row[i]; if (ch !== '.') { ctx.fillStyle = PAL[ch]; ctx.fillRect(x + i, y + j, 1, 1); } }
+  const dots = slides.map((slide, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'fp-dot';
+    b.setAttribute('aria-label', `Show project ${i + 1}: ${slide.querySelector('.fp-name').textContent}`);
+    b.addEventListener('click', () => go(i));
+    dotsBox.appendChild(b);
+    return b;
   });
 
-  const draw = () => {
-    const W = clip.clientWidth, H = clip.clientHeight;
-    if (!W || !H) return;
-    const U = Math.max(3, Math.round(H / 335 * 4));           // the clip's own pixel size on screen
-    const w = Math.ceil(W / U), h = Math.ceil(H / U);
-    canvas.width = w; canvas.height = h;
-    ctx.clearRect(0, 0, w, h);
-    const ground = Math.round(h * 0.755);
-    ctx.fillStyle = '#aeaeae'; ctx.fillRect(0, ground, w, Math.max(1, Math.round(h * 0.018)));
-    // where the clip sits, in art pixels; scenery fills the space either side of it
-    const r = img.getBoundingClientRect(), c = clip.getBoundingClientRect();
-    const gl = Math.floor((r.left - c.left) / U), gr = Math.ceil((r.right - c.left) / U);
-    const place = (from, to) => {
-      let x = from, k = 0;
-      while (true) {
-        const s = ORDER[k % ORDER.length]; k++;
-        if (x + s[0].length > to) break;
-        sprite(s, x, ground - s.length);
-        x += s[0].length + 3 + ((k * 5) % 7);
-      }
-    };
-    place(gr - 2, w - 1);
-    if (gl > 14) place(1, gl + 2);
-    let seed = 3; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-    ctx.fillStyle = '#a6a6a6';
-    for (let i = 0; i < w / 2.5; i++) {
-      const x = Math.floor(rnd() * w), y = ground + 3 + Math.floor(rnd() * (h - ground - 5));
-      if (x > gl && x < gr) continue;
-      ctx.fillRect(x, y, 1, 1); if (rnd() < 0.35) { ctx.fillRect(x + 1, y - 1, 1, 1); ctx.fillRect(x + 2, y, 1, 1); }
-    }
+  const go = (i) => {
+    index = (i + slides.length) % slides.length;               // wraps round at either end
+    track.style.transform = `translateX(calc(${-index * 100}% - ${index * 40}px))`;
+    slides.forEach((s, k) => { const on = k === index; s.inert = !on; s.setAttribute('aria-hidden', String(!on)); });
+    dots.forEach((d, k) => d.setAttribute('aria-current', String(k === index)));
   };
 
-  draw();
-  if (img.complete) draw(); else img.addEventListener('load', draw, { once: true });
-  if ('ResizeObserver' in window) new ResizeObserver(draw).observe(clip);
+  prev.addEventListener('click', () => go(index - 1));
+  next.addEventListener('click', () => go(index + 1));
+  root.addEventListener('keydown', (e) => {
+    if (e.target.closest('input, textarea')) return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
+  });
+
+  // swipe on touch screens
+  let x0 = null, y0 = 0;
+  track.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') { x0 = e.clientX; y0 = e.clientY; } });
+  track.addEventListener('pointerup', (e) => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) go(index + (dx < 0 ? 1 : -1));
+  });
+  track.addEventListener('pointercancel', () => { x0 = null; });
+
+  go(0);
+})();
+
+
+// ===== Featured projects panel: a wavy hand-drawn outline on all four sides (clip + stroke from one path) =====
+(() => {
+  const fp = document.querySelector('.fp');
+  const inner = fp && fp.querySelector('.fp-in');
+  if (!inner || !CSS.supports('clip-path', 'path("M0 0")')) return;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  const line = document.createElementNS(NS, 'path');
+  svg.setAttribute('class', 'fp-edge'); svg.setAttribute('aria-hidden', 'true');
+  line.setAttribute('fill', 'none'); line.setAttribute('stroke', '#191526'); line.setAttribute('stroke-width', '2.5'); line.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(line); fp.appendChild(svg);
+
+  const build = () => {
+    const W = fp.offsetWidth, H = fp.offsetHeight;
+    if (!W || !H) return;
+    const small = W < 560, A = small ? 6 : 9, P0 = small ? 150 : 250, m = A + 2, a = A / 0.75, r = small ? 18 : 26;
+    let d = `M${m + r} ${m}`;
+    // one side: runs from (x,y) along t for `len`, humps bulging out along o then in, alternately
+    const side = (x, y, tx, ty, ox, oy, len) => {
+      const n = Math.max(2, Math.round(len / P0)), p = len / n;
+      for (let i = 0; i < n; i++) {
+        const bx = x + tx * p * i, by = y + ty * p * i, f = (k, s) => `${(bx + tx * p * k + ox * a * s).toFixed(1)} ${(by + ty * p * k + oy * a * s).toFixed(1)}`;
+        d += ` C${f(.125, 1)},${f(.375, 1)},${f(.5, 0)} C${f(.625, -1)},${f(.875, -1)},${f(1, 0)}`;
+      }
+    };
+    const q = (cx, cy, x, y) => { d += ` Q${cx} ${cy} ${x} ${y}`; };
+    side(m + r, m, 1, 0, 0, -1, W - 2 * (m + r));            // top, left to right
+    q(W - m, m, W - m, m + r);
+    side(W - m, m + r, 0, 1, 1, 0, H - 2 * (m + r));         // right, downwards
+    q(W - m, H - m, W - m - r, H - m);
+    side(W - m - r, H - m, -1, 0, 0, 1, W - 2 * (m + r));    // bottom, right to left
+    q(m, H - m, m, H - m - r);
+    side(m, H - m - r, 0, -1, -1, 0, H - 2 * (m + r));       // left, upwards
+    q(m, m, m + r, m);
+    d += ' Z';
+    inner.style.clipPath = `path('${d}')`;
+    line.setAttribute('d', d);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    fp.classList.add('is-wavy');
+  };
+  build();
+  if ('ResizeObserver' in window) new ResizeObserver(build).observe(fp);
+  window.addEventListener('load', build);
 })();

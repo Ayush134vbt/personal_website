@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&family=Comic+Neue:wght@700&family=Press+Start+2P&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Patrick+Hand&family=Comic+Neue:wght@700&family=Press+Start+2P&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Syne:wght@600;700;800&family=Space+Mono:wght@400;700&family=Archivo+Black&family=Bangers&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>(function(){try{if(sessionStorage.getItem("intro-seen")||matchMedia("(prefers-reduced-motion: reduce)").matches)return}catch(e){}var d=document.documentElement;d.classList.add("intro-on");setTimeout(function(){d.classList.remove("intro-on")},9000)})();</script>
   <script src="script.js" defer></script>
@@ -25,14 +25,7 @@
 
   <header class="site-header">
     <canvas class="header-scene" aria-hidden="true"></canvas>
-    <a class="brand" href="#home" aria-label="Ayush Prasad, home">
-      <img class="brand-logo" src="assets/ayush-name.jpg" alt="Ayush Prasad">
-    </a>
 
-        <div class="contact-row header-contact" aria-label="Contact">
-<a class="contact-mail" href="mailto:prasadayush929@gmail.com" aria-label="Email Ayush"><img src="assets/email-mailbox.jpg" alt="A pop-art mailbox with an envelope flying out. Click to send an email."></a>
-          <a class="contact-mail" href="https://www.linkedin.com/in/ayush-prasad-0b894427a/" target="_blank" rel="noopener noreferrer" aria-label="Ayush on LinkedIn"><img src="assets/linkedin-pop.svg" alt="A pop-art LinkedIn logo bursting out. Click to open my LinkedIn profile."></a>
-        </div>
   </header>
 
   <main id="main">
@@ -41,25 +34,36 @@
     <section class="hero" id="home" aria-label="Introduction">
       <div class="cosmos" aria-hidden="true"></div>
       <div class="hero-copy">
-        <div class="portrait-row reveal">
-          <figure class="hero-portrait" aria-label="Portrait of Ayush Prasad">
-          <img src="assets/ayush.jpg" alt="Ayush Prasad">
-          <div class="writer"><canvas id="writer-canvas" width="240" height="74" role="img" aria-label="A little stick figure writing: Photo taken by Anjola"></canvas></div>
-        </figure>
-          <div class="portrait-side">
-            <p class="hero-intro cloud-bubble"><span>I'm <strong>Ayush</strong>. Welcome to my website, I'm A Data Science and Psychology student at Victoria University. I work mostly in Python, R and SQL, pulling patterns out of messy datasets and trying to figure out the human questions sitting underneath the numbers.</span></p>
+        <div class="intro-row reveal">
+        <div class="intro">
+          <p class="intro-role">Data Science<br>&amp; Psychology</p>
+          <p class="intro-desc">Hi, I'm Ayush. Give me a dataset and a question, and I'll find a clear answer and show it in a visualisation worth looking at.</p>
+          <div class="intro-actions">
+            <a class="intro-btn intro-btn-main" href="#projects">View my work <span aria-hidden="true">↗</span></a>
+            <a class="intro-btn" href="assets/AyushCV.pdf" download="AyushPrasad-CV.pdf">Download resume <span aria-hidden="true">↓</span></a>
           </div>
+          <p class="intro-connect-label">Connect with me</p>
+          <ul class="intro-connect">
+            <li><a href="https://github.com/Ayush134vbt" target="_blank" rel="noopener noreferrer" aria-label="Ayush on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a></li>
+            <li class="pop"><a href="https://www.linkedin.com/in/ayush-prasad-0b894427a/" target="_blank" rel="noopener noreferrer" aria-label="Ayush on LinkedIn"><img src="assets/linkedin-pop.svg" alt=""></a></li>
+            <li class="pop"><a href="mailto:prasadayush929@gmail.com" aria-label="Email Ayush"><img src="assets/email-mailbox.jpg" alt=""></a></li>
+          </ul>
         </div>
 
-        <div class="projects-heading-row reveal">
-          <div class="fire-heading" id="fire-heading">
-            <div class="fh-clip" title="Click to replay">
-              <canvas class="fh-scene" aria-hidden="true"></canvas>
-              <img src="assets/fire-heading-first.png" alt="Pixel-art clip: a ninja breathes a red fireball">
-              <canvas class="fh-burn" aria-hidden="true"></canvas>
-              <h2 id="projects-title" class="fh-title"><span class="fh-inner"><span class="fh-text">My Projects</span></span></h2>
+        <figure class="intro-photo">
+          <div class="intro-photo-frame">
+            <span class="intro-photo-img"><img src="assets/ayush.jpg" alt="Ayush Prasad"></span>
+            <div class="intro-code" aria-label="Skills: Python, R and SQL for code; Power BI for dashboards; Excel for spreadsheets">
+              <p><span class="c-pr">&gt;</span> <span class="c-kw">const</span> ayush = {</p>
+              <p class="c-in"><span class="c-k">code:</span> <span class="c-v">'Python, R, SQL'</span>,</p>
+              <p class="c-in"><span class="c-k">dashboards:</span> <span class="c-v">'Power BI'</span>,</p>
+              <p class="c-in"><span class="c-k">sheets:</span> <span class="c-v">'Excel'</span>,</p>
+              <p class="c-in"><span class="c-k">passion:</span> <span class="c-v">'Clear answers'</span></p>
+              <p>}</p>
             </div>
           </div>
+          <figcaption>Photo by Anjola</figcaption>
+        </figure>
         </div>
       </div>
 
@@ -71,46 +75,66 @@
     </section>
 
     <section class="projects-section" id="projects" aria-label="My projects">
-      <canvas class="pixel-scene" aria-hidden="true"></canvas>
 
-      <div class="project-grid">
-        <article class="project-card project-card-bike reveal tilt-card" data-tags="python pandas statsmodels regression statistical modelling">
-          <a class="project-visual visual-bike" href="https://github.com/Ayush134vbt/bike_sharing_demand_analysis" target="_blank" rel="noopener noreferrer" aria-label="Open Bike Sharing Demand Analysis GitHub repository">
-            <img src="assets/bike-illustration.svg" alt="A simple line chart titled Daily Bike Demand, trending upward with data points">
-            <span class="visual-arrow" aria-hidden="true">↗</span>
-          </a>
-          <div class="project-info">
-            <div class="project-title-row">
-              <div>
-                <p class="project-kicker">DATA EXPLORATION & MODELLING</p>
-                <h3>Bike Sharing<br>Demand Analysis</h3>
-              </div>
-            </div>
-            <p class="project-description">What drives hourly bike rentals in Washington, DC? Using two years of Capital Bikeshare data, I found commuter peaks at 8 AM and 5–6 PM and a moderate link with temperature (r = 0.40). I then compared linear, Poisson and negative binomial regression on a held-out later period. All three beat the baseline, with Poisson cutting MAE by about 39%. The diagnostics showed strong autocorrelation the models missed.</p>
-            <ul class="tech-list" aria-label="Technologies used">
-              <li>Python</li><li>pandas</li><li>statsmodels</li><li>Regression</li>
-            </ul>
-          </div>
-        </article>
+      <div class="projects-layout">
+        <figure class="goku reveal">
+          <img src="assets/goku.webp" alt="Manga-style illustration of a fighter in an orange outfit raising both arms to gather a huge glowing ball of energy">
+          <h2 id="projects-title" class="goku-title"><span>My</span><span>Projects</span></h2>
+        </figure>
 
-        <article class="project-card project-card-sql reveal tilt-card" data-tags="sql postgresql window functions power bi">
-          <a class="project-visual visual-sql" href="https://github.com/Ayush134vbt/ecommerce_sql_analysis" target="_blank" rel="noopener noreferrer" aria-label="Open E-commerce SQL Analysis GitHub repository">
-            <img src="assets/sql-illustration.svg" alt="Three linked database tables for customers, products and orders beside a SQL query joining them">
-            <span class="visual-arrow" aria-hidden="true">↗</span>
-          </a>
-          <div class="project-info">
-            <div class="project-title-row">
-              <div>
-                <p class="project-kicker">BUSINESS & DATA ANALYSIS</p>
-                <h3>E-commerce<br>SQL Analysis</h3>
-              </div>
-            </div>
-            <p class="project-description">About 100,000 Olist orders from Brazilian online retailers, analysed in PostgreSQL and summarised in a three-page Power BI dashboard. I checked data quality, then measured sales, customers, products and delivery. It showed 13.2M in delivered product revenue, about 97% of customers ordering only once, and an 8.1% late-delivery rate concentrated in the north-east.</p>
-            <ul class="tech-list" aria-label="Technologies used">
-              <li>PostgreSQL</li><li>Window functions</li><li>Power BI</li>
-            </ul>
+      <div class="fp reveal" aria-roledescription="carousel" aria-label="Featured projects">
+        <div class="fp-in">
+        <div class="fp-head">
+          <a class="fp-all" href="https://github.com/Ayush134vbt?tab=repositories" target="_blank" rel="noopener noreferrer">View all projects <span aria-hidden="true">→</span></a>
+          <div class="fp-nav">
+            <button class="fp-btn fp-prev" type="button" aria-label="Previous project" aria-controls="fp-track"><span aria-hidden="true">‹</span></button>
+            <button class="fp-btn fp-next" type="button" aria-label="Next project" aria-controls="fp-track"><span aria-hidden="true">›</span></button>
           </div>
-        </article>
+        </div>
+
+        <div class="fp-viewport">
+          <div class="fp-track" id="fp-track" aria-live="polite">
+            <article class="fp-card manga" style="--frame: #ff86a6" aria-roledescription="slide" aria-label="1 of 2: Bike Sharing Demand Analysis">
+              <header class="mg-head"><span class="mg-ch">Chapter 01</span><span class="mg-kicker">Data exploration &amp; modelling</span></header>
+              <h4 class="fp-name mg-title">Bike Sharing Demand Analysis</h4>
+              <a class="fp-frame mg-panel mg-art-panel" href="https://github.com/Ayush134vbt/bike_sharing_demand_analysis" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+                <span class="fp-art fp-art-bike"><img src="assets/bike-illustration.svg" alt=""></span>
+                <span class="mg-sfx">DING DING!</span>
+              </a>
+              <div class="mg-row">
+                <div class="mg-panel mg-talk"><p class="fp-desc mg-bubble">What drives hourly bike rentals in Washington, DC? Using two years of Capital Bikeshare data, I found commuter peaks at 8 AM and 5–6 PM and a moderate link with temperature (r = 0.40). I then compared linear, Poisson and negative binomial regression on a held-out later period. All three beat the baseline, with Poisson cutting MAE by about 39%. The diagnostics showed strong autocorrelation the models missed.</p></div>
+                <div class="mg-panel mg-side">
+                  <p class="mg-label">Powered by</p>
+                  <ul class="fp-tags" aria-label="Technologies used"><li>Python</li><li>pandas</li><li>statsmodels</li><li>Regression</li></ul>
+                  <a class="fp-cta" href="https://github.com/Ayush134vbt/bike_sharing_demand_analysis" target="_blank" rel="noopener noreferrer">Read chapter <span aria-hidden="true">→</span></a>
+                </div>
+              </div>
+              <p class="mg-page" aria-hidden="true">— 01 —</p>
+            </article>
+
+            <article class="fp-card manga" style="--frame: #ffe93a" aria-roledescription="slide" aria-label="2 of 2: E-commerce SQL Analysis">
+              <header class="mg-head"><span class="mg-ch">Chapter 02</span><span class="mg-kicker">Business &amp; data analysis</span></header>
+              <h4 class="fp-name mg-title">E-commerce SQL Analysis</h4>
+              <a class="fp-frame mg-panel mg-art-panel" href="https://github.com/Ayush134vbt/ecommerce_sql_analysis" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+                <span class="fp-art fp-art-sql"><img src="assets/sql-illustration.svg" alt=""></span>
+                <span class="mg-sfx">SELECT!!</span>
+              </a>
+              <div class="mg-row">
+                <div class="mg-panel mg-talk"><p class="fp-desc mg-bubble">About 100,000 Olist orders from Brazilian online retailers, analysed in PostgreSQL and summarised in a three-page Power BI dashboard. I checked data quality, then measured sales, customers, products and delivery. It showed 13.2M in delivered product revenue, about 97% of customers ordering only once, and an 8.1% late-delivery rate concentrated in the north-east.</p></div>
+                <div class="mg-panel mg-side">
+                  <p class="mg-label">Powered by</p>
+                  <ul class="fp-tags" aria-label="Technologies used"><li>PostgreSQL</li><li>Window functions</li><li>Power BI</li></ul>
+                  <a class="fp-cta" href="https://github.com/Ayush134vbt/ecommerce_sql_analysis" target="_blank" rel="noopener noreferrer">Read chapter <span aria-hidden="true">→</span></a>
+                </div>
+              </div>
+              <p class="mg-page" aria-hidden="true">— 02 —</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="fp-dots" role="group" aria-label="Choose a project"></div>
+        </div>
+      </div>
       </div>
 
       <p class="filter-status" id="filter-status" role="status" aria-live="polite" hidden></p>

@@ -595,14 +595,14 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 /* ---------- Wavy bottom edge on the painting, flowing into the projects (kept off the Sasuke banner) ---------- */
 .hero-art-wrap { border-bottom-left-radius: 0; }
 .hero-art-wrap::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; z-index: 5; height: 44px; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%23fcfcfc'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left bottom / 320px 44px repeat-x; }
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%232e9824'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left bottom / 320px 44px repeat-x; }
 @media (max-width: 700px) { .hero-art-wrap::after { height: 30px; background-size: 220px 30px; } }
 
 /* ---------- Collage edges: wavy top on the Sasuke banner, wavy left edge on the painting ---------- */
 .hero-copy .fh-clip { border-top: 0; }
 .hero-copy .projects-heading-row { position: relative; align-items: stretch; }
 .hero-copy .projects-heading-row::before { content: ''; position: absolute; left: 0; right: 0; top: -41px; z-index: 4; height: 44px; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%23fcfcfc'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left top / 320px 44px repeat-x; }
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%232e9824'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left top / 320px 44px repeat-x; }
 @media (min-width: 701px) {
   /* the banner runs on under the painting, so the painting's wavy edge shows white where they meet */
   .hero-copy .projects-heading-row { margin-right: calc(-1 * clamp(26px, 6vw, 92px) - 40px); }
@@ -616,3 +616,305 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
   .hero-art-wrap::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 32px; z-index: 4; pointer-events: none;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='320' viewBox='0 0 32 320'%3E%3Cpath d='M16 0 C 0 40, 0 120, 16 160 C 32 200, 32 280, 16 320' fill='none' stroke='%23191526' stroke-width='5'/%3E%3C/svg%3E") left top / 32px 320px repeat-y; }
 }
+
+/* ---------- Featured projects carousel: one project at a time, arrows + dots ---------- */
+.fp { --fp-ink: var(--ink); position: relative; max-width: 880px; margin: clamp(30px, 4vw, 56px) auto 0; padding: clamp(20px, 3vw, 34px); background: #fff; border: 2.5px solid var(--fp-ink); box-shadow: 8px 8px 0 var(--fp-ink); }
+.fp-head { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "title title" "all nav"; align-items: center; row-gap: 14px; margin-bottom: clamp(18px, 2.4vw, 26px); }
+.fp-title { grid-area: title; margin: 0; font: 800 clamp(20px, 2.2vw, 28px)/1 var(--display); letter-spacing: -.01em; text-transform: uppercase; }
+.fp-all, .fp-cta { display: inline-flex; align-items: center; gap: .6em; width: fit-content; padding: 9px 14px; background: #fff; border: 2px solid var(--fp-ink); box-shadow: 4px 4px 0 var(--fp-ink); font: 700 11px/1 'Space Mono', monospace; letter-spacing: .04em; text-transform: uppercase; transition: transform .15s ease, box-shadow .15s ease; }
+.fp-all { grid-area: all; }
+.fp-all:hover, .fp-cta:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--fp-ink); }
+.fp-all:active, .fp-cta:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--fp-ink); }
+.fp-nav { grid-area: nav; display: flex; gap: 12px; }
+.fp-btn { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; background: #ff86a6; color: var(--fp-ink); border: 2px solid var(--fp-ink); box-shadow: 4px 4px 0 var(--fp-ink); font: 700 22px/1 'Space Mono', monospace; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.fp-btn:hover { background: #ff6f94; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--fp-ink); }
+.fp-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--fp-ink); }
+.fp-btn span { margin-top: -3px; }
+
+.fp-viewport { overflow: hidden; margin: -6px -12px -14px -6px; padding: 6px 12px 14px 6px; }   /* room for the card's hard shadow */
+.fp-track { display: flex; gap: 40px; transition: transform .55s cubic-bezier(.2,.75,.2,1); touch-action: pan-y; }
+.fp-card { flex: 0 0 100%; min-width: 0; background: #fff; border: 2.5px solid var(--fp-ink); box-shadow: 7px 7px 0 var(--fp-ink); }
+.fp-frame { display: block; padding: clamp(12px, 2vw, 20px); background: var(--frame, #ff86a6); border-bottom: 2.5px solid var(--fp-ink); }
+.fp-art { display: block; height: clamp(200px, 30vw, 340px); overflow: hidden; border: 2.5px solid var(--fp-ink); }
+.fp-art-bike { background: linear-gradient(145deg, #323cfb 0%, #7448df 52%, #f65456 100%); }
+.fp-art-sql { background: var(--midnight); }
+.fp-art img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+.fp-frame:hover .fp-art img { transform: scale(1.04); }
+.fp-body { padding: clamp(18px, 2.6vw, 28px); }
+.fp-kicker { margin: 0 0 8px; color: #6d6776; font: 700 10px/1.3 'Space Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.fp-name { margin: 0; font: 800 clamp(20px, 2.4vw, 30px)/1.05 var(--display); letter-spacing: -.01em; text-transform: uppercase; }
+.fp-desc { max-width: 680px; margin: 14px 0 18px; color: #2c2834; font: 400 12.5px/1.7 'Space Mono', monospace; }
+.fp-tags { display: flex; flex-wrap: wrap; gap: 9px; margin: 0 0 22px; padding: 0; list-style: none; }
+.fp-tags li { padding: 6px 9px; background: #fff; border: 2px solid var(--fp-ink); font: 700 10.5px/1 'Space Mono', monospace; }
+.fp-cta { padding: 12px 18px; font-size: 12px; }
+
+.fp-dots { display: flex; justify-content: center; gap: 8px; margin-top: clamp(20px, 2.6vw, 28px); }
+.fp-dot { width: 13px; height: 13px; padding: 0; background: #fff; border: 2px solid var(--fp-ink); border-radius: 50%; cursor: pointer; transition: background .2s ease, transform .2s ease; }
+.fp-dot:hover { transform: scale(1.2); }
+.fp-dot[aria-current="true"] { background: var(--fp-ink); }
+.fp a:focus-visible, .fp button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+@media (max-width: 560px) {
+  .fp { box-shadow: 5px 5px 0 var(--fp-ink); }
+  .fp-desc { font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) { .fp-track { transition: none; } }
+
+/* ---------- Home: grid-paper intro (tag, headline, blurb, buttons, links) + skills strip ---------- */
+.intro { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.intro-tag { display: inline-flex; align-items: center; gap: .5em; margin: 0 0 18px; padding: 7px 11px; background: #7b5cf0; color: #fff; border: 2px solid var(--ink); font: 700 11px/1.2 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }
+.intro-role { margin: 0 0 20px; font: 400 clamp(32px, 4.3vw, 64px)/1 'Archivo Black', 'Arial Black', sans-serif; letter-spacing: -.01em; text-transform: uppercase; color: var(--ink); }
+.intro-desc { max-width: 470px; margin: 0 0 28px; color: #2c2834; font: 400 clamp(13px, 1.05vw, 15px)/1.75 'Space Mono', monospace; }
+.intro-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
+.intro-btn { display: inline-flex; align-items: center; gap: .7em; padding: 13px 18px; background: #fff; color: var(--ink); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); font: 700 12px/1 'Space Mono', monospace; letter-spacing: .04em; text-transform: uppercase; transition: transform .15s ease, box-shadow .15s ease; }
+.intro-btn-main { background: var(--lime); }
+.intro-btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+.intro-btn:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+.intro-connect-label { margin: 0 0 10px; font: 700 11px/1 'Space Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }
+.intro-connect { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.intro-connect a { display: grid; place-items: center; width: 42px; height: 42px; background: #fff; color: var(--ink); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.intro-connect a:hover { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+.intro-connect svg { width: 20px; height: 20px; }
+.intro a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+/* skills strip runs edge to edge across the column (and on under the painting's wavy edge) */
+.skills { align-self: stretch; display: flex; margin: 6px calc(-1 * clamp(26px, 6vw, 92px)) 42px; background: #f4f1ea; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.skills-label { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 8px; margin: 0; padding: 18px clamp(18px, 2.4vw, 30px); background: #7b5cf0; color: #fff; border-right: 2px solid var(--ink); font: 800 clamp(16px, 1.5vw, 21px)/1 var(--display); text-transform: uppercase; }
+.skills-list { flex: 1; display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; gap: 14px 10px; margin: 0; padding: 18px 14px; list-style: none; }
+.skills-list li { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 64px; font: 700 11px/1 'Space Mono', monospace; color: var(--ink); }
+.skills-list svg { width: 30px; height: 30px; transition: transform .2s cubic-bezier(.34,1.56,.64,1); }
+.skills-list li:hover svg { transform: translateY(-3px) rotate(-6deg); }
+@media (min-width: 701px) { .skills { margin-right: calc(-1 * clamp(26px, 6vw, 92px) - 40px); padding-right: 40px; } }
+@media (max-width: 700px) {
+  .skills { margin: 4px -24px 36px; }
+  .skills-label { padding: 14px 16px; }
+  .skills-list { gap: 14px 6px; }
+}
+
+/* intro text reads light on the night-sky clouds */
+.intro-role { color: var(--paper); text-shadow: .06em .06em 0 var(--coral); }
+.intro-desc { color: #e9e4f2; text-shadow: 0 1px 3px rgba(1, 34, 69, .9); }
+.intro-connect-label { color: var(--paper); }
+
+/* email + LinkedIn in "Connect with me" use the pop-art pictures from the top bar */
+.intro-connect { align-items: center; }
+.intro-connect .pop a { width: auto; height: auto; padding: 0; overflow: hidden; line-height: 0; border-radius: var(--r-md); background: transparent; }
+.intro-connect .pop a:hover { background: transparent; transform: translate(-2px, -2px) rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+.intro-connect .pop img { display: block; width: auto; height: 62px; }
+@media (max-width: 700px) { .intro-connect .pop img { height: 52px; } }
+.intro-connect li:not(.pop) a { width: 62px; height: 62px; }
+.intro-connect li:not(.pop) svg { width: 28px; height: 28px; }
+@media (max-width: 700px) { .intro-connect li:not(.pop) a { width: 52px; height: 52px; } }
+
+/* ---------- Featured projects panel: wavy outline on all four sides (path drawn by script.js) ---------- */
+.fp { padding: 0; background: none; border: 0; box-shadow: none; }
+.fp-in { padding: clamp(38px, 4.6vw, 54px); background: #fff; border: 2.5px solid var(--fp-ink); box-shadow: 8px 8px 0 var(--fp-ink); }
+.fp.is-wavy { filter: drop-shadow(8px 8px 0 var(--fp-ink)); }
+.fp.is-wavy .fp-in { border: 0; box-shadow: none; }
+.fp-edge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+@media (max-width: 560px) {
+  .fp { box-shadow: none; }
+  .fp-in { padding: 34px 22px; box-shadow: 5px 5px 0 var(--fp-ink); }
+  .fp.is-wavy { filter: drop-shadow(5px 5px 0 var(--fp-ink)); }
+}
+
+/* ---------- Photo beside the intro, in a lime-framed box ---------- */
+.intro-row { display: flex; flex-wrap: wrap; align-items: center; gap: 30px clamp(26px, 3.4vw, 50px); width: 100%; }
+.intro-row .intro { flex: 1 1 340px; min-width: 0; }
+.intro-row .intro-role { font-size: clamp(28px, 3.3vw, 50px); }
+.intro-photo { position: relative; isolation: isolate; flex: 0 0 auto; width: clamp(160px, 16vw, 240px); margin: 0 16px 0 0; }
+.intro-photo-frame { position: relative; aspect-ratio: 4 / 5; background: #000; border: 2.5px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+.intro-photo-frame::before { content: ''; position: absolute; inset: 0; z-index: -1; transform: translate(16px, -16px); background: var(--lime); border: 2.5px solid var(--ink); }
+.intro-photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 24%; }
+.intro-photo figcaption { margin-top: 14px; color: #cfc9dc; font: 700 10px/1 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 700px) { .intro-photo { width: min(62%, 230px); } }
+.intro-row .intro { flex: 1 1 300px; }
+.intro-row .intro-role { font-size: clamp(26px, 3.1vw, 46px); }
+.intro-photo { width: clamp(150px, 13.5vw, 200px); margin-right: -34px; }
+@media (max-width: 700px) { .intro-photo { width: min(62%, 230px); margin-right: 16px; } }
+
+/* ---------- Wide screens: the photo is a tall panel filling the whole space beside the intro ---------- */
+@media (min-width: 1251px) {
+  .intro-row { --pw: clamp(210px, 17.5vw, 310px); --pr: clamp(26px, 6vw, 92px); --pt: clamp(48px, 6vw, 92px); --gap: clamp(22px, 2.4vw, 32px);
+    position: relative; flex-wrap: nowrap; padding-right: max(0px, calc(var(--pw) - var(--pr) + 78px)); }
+  .intro-row .intro-role { font-size: clamp(26px, 2.85vw, 44px); }
+  .intro-photo { position: absolute; display: flex; flex-direction: column; width: var(--pw); margin: 0;
+    right: calc(40px - var(--pr)); top: calc(30px - var(--pt)); bottom: calc(14px - var(--gap)); }
+  .intro-photo-frame { flex: 1 1 auto; min-height: 0; aspect-ratio: auto; }
+  .intro-photo-frame img { object-position: 50% 60%; }
+  .intro-photo figcaption { flex: 0 0 auto; }
+}
+@media (min-width: 1700px) { .intro-row { --pw: min(22vw, 430px); } }
+
+/* ---------- Skills strip removed: a bigger intro fills the space ---------- */
+.hero-copy .projects-heading-row { flex: 0 0 auto; }
+.intro-row { flex: 1 1 auto; }
+@media (min-width: 1251px) {
+  .intro-row { --pw: clamp(200px, 15.5vw, 300px); padding-bottom: 28px; align-items: center; }
+  .intro-photo { bottom: calc(47px - var(--gap)); }
+  .intro-tag { margin-bottom: 26px; padding: 9px 14px; font-size: 12px; }
+  .intro-row .intro-role { margin-bottom: 30px; font-size: clamp(28px, 3vw, 60px); line-height: 1.02; }
+  .intro-desc { max-width: 540px; margin-bottom: 38px; font-size: clamp(14.5px, 1.2vw, 20px); line-height: 1.8; }
+  .intro-actions { gap: 20px; margin-bottom: 38px; }
+  .intro-btn { padding: 17px 24px; font-size: clamp(12.5px, .95vw, 15px); box-shadow: 6px 6px 0 var(--ink); }
+  .intro-connect-label { margin-bottom: 14px; font-size: 13px; }
+  .intro-connect { gap: 18px; }
+  .intro-connect .pop img, .intro-connect li:not(.pop) a { height: 74px; }
+  .intro-connect li:not(.pop) a { width: 74px; }
+  .intro-connect li:not(.pop) svg { width: 32px; height: 32px; }
+}
+@media (min-width: 1700px) { .intro-row { --pw: min(19vw, 400px); } }
+@media (min-width: 1251px) {
+  .intro-row { padding-bottom: 62px; }
+  .intro-actions { gap: 14px; flex-wrap: nowrap; }
+  .intro-btn { padding: 15px 18px; font-size: clamp(11.5px, .85vw, 15px); white-space: nowrap; }
+}
+@media (min-width: 1251px) {
+  .intro-connect { gap: clamp(12px, 1.2vw, 18px); }
+  .intro-connect .pop img, .intro-connect li:not(.pop) a { height: clamp(56px, 5vw, 76px); }
+  .intro-connect li:not(.pop) a { width: clamp(56px, 5vw, 76px); }
+}
+
+/* ---------- Skills as a code card laid over the photo ---------- */
+.intro-code { position: absolute; z-index: 3; left: -14%; right: -6%; bottom: -14px; padding: clamp(11px, 1vw, 16px) clamp(12px, 1.1vw, 18px); background: #7b5cf0; border: 2.5px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); color: #fff; font: 400 clamp(10px, .85vw, 13px)/1.65 'Space Mono', monospace; white-space: nowrap; }
+.intro-code p { margin: 0; }
+.intro-code .c-in { padding-left: 1.3em; }
+.intro-code .c-pr, .intro-code .c-kw { color: #f2ec9a; }
+.intro-code .c-k { color: #ff9ec0; }
+.intro-code .c-v { color: #fff; }
+.intro-photo figcaption { margin-top: 28px; }
+@media (min-width: 1251px) { .intro-photo { bottom: calc(61px - var(--gap)); } }
+@media (max-width: 700px) { .intro-code { left: -8%; right: -8%; font-size: 11px; } }
+@media (max-width: 1250px) {
+  .intro-row { padding-bottom: 46px; }
+  .intro-photo-frame { aspect-ratio: 3 / 5; }
+  .intro-photo-frame img { object-position: 50% 50%; }
+}
+@media (max-width: 700px) { .intro-code { font-size: 10.5px; padding: 10px 12px; } }
+@media (min-width: 701px) and (max-width: 1250px) {
+  .intro-photo { width: clamp(210px, 24vw, 270px); margin-right: 24px; }
+  .intro-code { font-size: 11.5px; }
+}
+
+/* ---------- Projects: Sasuke banner on the left, featured-projects carousel on the right ---------- */
+.projects-section { padding-top: clamp(44px, 5.5vw, 80px); }
+.projects-layout { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 4vw, 60px); align-items: center; }
+.projects-layout .projects-heading-row { display: block; margin: 0; }
+.projects-layout .fire-heading { margin: 0; }
+.projects-layout .fh-clip { height: clamp(430px, 40vw, 580px); background: transparent; border: 0; box-shadow: none; }
+.projects-layout .fh-scene { display: none; }
+.projects-layout .fh-clip img { -webkit-mask-image: none; mask-image: none; left: 50%; transform: translateX(-50%); top: auto; bottom: 0; height: 74%; }
+.projects-layout .fh-title { left: 0; right: 0; top: 4%; bottom: auto; height: auto; font-size: clamp(20px, 7cqw, 46px); }
+.projects-layout .fp { max-width: none; margin: 0; }
+.fp-head { grid-template-areas: "all nav"; row-gap: 0; }
+@media (max-width: 1000px) {
+  .projects-layout { grid-template-columns: minmax(0, 1fr); }
+  .projects-layout .fh-clip { height: clamp(340px, 78vw, 480px); }
+}
+
+/* the hero's navy now ends in a wavy edge that flows into the white projects section */
+@media (min-width: 701px) {
+  .hero-copy { padding-bottom: 30px; }
+  .hero-copy::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; z-index: 5; height: 44px; pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%232e9824'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left bottom / 320px 44px repeat-x; }
+}
+.projects-layout .fh-clip img { height: 84%; }
+.projects-layout .fh-title { top: 5%; }
+.intro-connect-label { text-shadow: 0 1px 4px #012245, 0 0 8px #012245; }
+@media (max-width: 1000px) { .projects-layout .fh-clip { height: clamp(300px, 66vw, 440px); } }
+
+/* ---------- Goku panel replaces the Sasuke banner: "MY PROJECTS" sits inside the ball of energy ---------- */
+.goku { position: relative; container-type: inline-size; margin: 0; line-height: 0; background: #fff; border: 2.5px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.goku img { display: block; width: 100%; height: auto; }
+.goku-title { position: absolute; left: 48.5%; top: 20.5%; transform: translate(-50%, -50%); margin: 0; display: flex; flex-direction: column; align-items: center; gap: .55em;
+  font: 400 7cqw/1 'Press Start 2P', monospace; text-transform: uppercase; text-align: center; white-space: nowrap; color: #161616; text-shadow: .09em .09em 0 #a8a8a8; -webkit-font-smoothing: none; }
+@media (max-width: 1000px) { .goku { width: min(100%, 360px); margin: 0 auto; } }
+
+/* ---------- Projects section: Planet Namek landscape background ---------- */
+.projects-section { background: #2e9824 url("assets/namek.jpg") center bottom / cover no-repeat; }
+.pixel-scene { display: none; }
+
+/* ---------- Project cards as manga chapter pages ---------- */
+.fp-card.manga { display: flex; flex-direction: column; gap: 12px; padding: 14px; background: #fff; border: 3px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); }
+.mg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 12px; background: var(--ink); color: #fff; }
+.mg-ch { font: 400 clamp(17px, 1.5vw, 22px)/1 'Bangers', 'Comic Neue', sans-serif; letter-spacing: .08em; color: var(--frame); }
+.mg-kicker { font: 700 10px/1.2 'Space Mono', monospace; letter-spacing: .1em; text-transform: uppercase; text-align: right; }
+.mg-title { margin: 2px 2px 0; font: 400 clamp(30px, 3.3vw, 48px)/.95 'Bangers', 'Comic Neue', sans-serif; letter-spacing: .03em; text-transform: uppercase; color: var(--ink); text-shadow: 3px 3px 0 var(--frame); }
+.mg-panel { position: relative; overflow: hidden; border: 3px solid var(--ink); background: #fff; }
+
+/* big panel: the illustration bursting out of radiating speed lines, with a sound effect */
+.manga .fp-frame.mg-art-panel { display: block; padding: clamp(14px, 1.8vw, 22px); border-bottom: 3px solid var(--ink);
+  background: repeating-conic-gradient(from 0deg at 50% 50%, #191526 0deg .9deg, #fff .9deg 7.5deg); }
+.manga .fp-art { height: clamp(170px, 20vw, 270px); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.mg-sfx { position: absolute; right: clamp(10px, 1.6vw, 22px); bottom: clamp(4px, 1vw, 12px); z-index: 2; font: 400 clamp(26px, 2.8vw, 42px)/1 'Bangers', 'Comic Neue', sans-serif; letter-spacing: .04em;
+  color: var(--frame); -webkit-text-stroke: 2px var(--ink); text-shadow: 3px 3px 0 var(--ink); transform: rotate(-8deg); pointer-events: none; transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+.mg-art-panel:hover .mg-sfx { transform: rotate(-4deg) scale(1.12); }
+
+/* bottom row: speech bubble on screentone + a dark caption panel */
+.mg-row { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 12px; }
+.mg-talk { padding: 16px; background-color: #fff; background-image: radial-gradient(rgba(25, 21, 38, .22) 1.1px, transparent 1.5px); background-size: 7px 7px; }
+.manga .fp-desc.mg-bubble { position: relative; max-width: none; margin: 0 0 12px; padding: 14px 16px; background: #fff; border: 2.5px solid var(--ink); border-radius: 26px; color: #191526; font: 700 13px/1.5 'Comic Neue', 'Comic Sans MS', sans-serif; }
+.mg-bubble::before, .mg-bubble::after { content: ''; position: absolute; left: 34px; border-style: solid; }
+.mg-bubble::before { top: 100%; border-width: 14px 6px 0 10px; border-color: var(--ink) transparent transparent transparent; }
+.mg-bubble::after { top: calc(100% - 3px); left: 37px; border-width: 11px 4px 0 7px; border-color: #fff transparent transparent transparent; }
+.mg-side { display: flex; flex-direction: column; gap: 12px; padding: 14px; background: var(--ink); color: #fff; }
+.mg-label { margin: 0; font: 400 20px/1 'Bangers', 'Comic Neue', sans-serif; letter-spacing: .08em; color: var(--frame); }
+.manga .fp-tags { margin: 0; gap: 7px; }
+.manga .fp-tags li { background: #fff; color: var(--ink); border: 2px solid #fff; }
+.manga .fp-tags li:nth-child(odd) { transform: rotate(-2deg); }
+.manga .fp-tags li:nth-child(even) { transform: rotate(1.5deg); }
+.manga .fp-cta { margin-top: auto; background: var(--frame); color: var(--ink); border-color: #fff; box-shadow: 4px 4px 0 #fff; }
+.manga .fp-cta:hover { box-shadow: 6px 6px 0 #fff; }
+.mg-page { margin: 0; text-align: center; font: 700 11px/1 'Space Mono', monospace; letter-spacing: .2em; color: #6d6776; }
+@media (max-width: 700px) {
+  .mg-row { grid-template-columns: minmax(0, 1fr); }
+  .mg-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .mg-kicker { text-align: left; }
+}
+
+/* ---------- Goku panel: a light hover animation (ball glows and pulses, panel lifts, heading bobs) ---------- */
+.goku { overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+.goku img { transition: transform .6s cubic-bezier(.2,.7,.2,1); transform-origin: 48% 20%; }
+.goku::after { content: ''; position: absolute; left: 48.5%; top: 20.5%; width: 80%; aspect-ratio: 1; transform: translate(-50%, -50%) scale(.9); border-radius: 50%; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, .9) 0%, rgba(160, 240, 255, .55) 40%, rgba(90, 210, 255, 0) 68%); mix-blend-mode: screen; transition: opacity .4s ease; }
+.goku:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 var(--ink); }
+.goku:hover img { transform: scale(1.03); }
+.goku:hover::after { opacity: 1; animation: gokuCharge 1.6s ease-in-out infinite; }
+.goku:hover .goku-title { animation: gokuFloat 1.6s ease-in-out infinite; }
+.goku-title { z-index: 2; }
+@keyframes gokuCharge { 0%, 100% { transform: translate(-50%, -50%) scale(.9); opacity: .55; } 50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; } }
+@keyframes gokuFloat { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 6px)); } }
+@media (prefers-reduced-motion: reduce) {
+  .goku, .goku img { transition: none; }
+  .goku:hover, .goku:hover img { transform: none; }
+  .goku:hover::after, .goku:hover .goku-title { animation: none; }
+}
+
+/* ---------- Light hover animation on the photo and the skills card (same feel as the Goku panel) ---------- */
+.intro-photo-img { display: block; width: 100%; height: 100%; overflow: hidden; }
+.intro-photo-frame { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+.intro-photo-frame img { transition: transform .6s cubic-bezier(.2,.7,.2,1); transform-origin: 50% 40%; }
+.intro-photo-frame::before { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.intro-photo-frame:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); }
+.intro-photo-frame:hover img { transform: scale(1.04); }
+.intro-photo-frame:hover::before { animation: limePulse 1.6s ease-in-out infinite; }
+@keyframes limePulse { 0%, 100% { transform: translate(16px, -16px); } 50% { transform: translate(22px, -22px); } }
+
+.intro-code { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+.intro-code:hover { animation: codeFloat 1.6s ease-in-out infinite; }
+@keyframes codeFloat {
+  0%, 100% { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink), 0 0 0 0 rgba(160, 135, 255, .55); }
+  50% { transform: translate(-3px, -9px); box-shadow: 9px 15px 0 var(--ink), 0 0 0 10px rgba(160, 135, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-photo-frame, .intro-photo-frame img, .intro-photo-frame::before, .intro-code { transition: none; }
+  .intro-photo-frame:hover, .intro-photo-frame:hover img { transform: none; }
+  .intro-photo-frame:hover::before, .intro-code:hover { animation: none; }
+}
+
+/* ---------- Intro sits near the top of the hero instead of centred in it ---------- */
+@media (min-width: 701px) {
+  .hero-copy { padding-top: clamp(34px, 3.6vw, 60px); }
+  .intro-row { align-items: flex-start; }
+  .intro-row .intro { padding-top: clamp(16px, 2.4vw, 40px); }
+}
+@media (min-width: 1251px) { .intro-row { --pt: clamp(34px, 3.6vw, 60px); } }
