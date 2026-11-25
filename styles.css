@@ -562,10 +562,12 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 /* Sasuke on the left with no ground or village behind him; "MY PROJECTS" right beside him, sized to fit the space left */
 .hero-copy .fh-scene { display: none; }
 .hero-copy .fh-clip img { left: 0; transform: none; -webkit-mask-image: none; mask-image: none; }
-/* --fh-h (the banner's height) is set by script.js; the clip is 1.134x as wide as it is tall and Sasuke fills its left ~60%.
-   The title is centred in the space to his right. */
-.hero-copy .projects-heading-row .fh-title { left: calc(var(--fh-h, 340px) * .68); right: 2%; top: 0; bottom: 30%; justify-content: center; flex-wrap: nowrap;
-  font-size: max(12px, min(calc((100cqw - var(--fh-h, 340px) * .68 - 40px) / 12.5), calc(var(--fh-h, 340px) * .11))); }
+/* --fh-h (the banner's height) is set by script.js. Sasuke is capped at 400px tall and centred vertically;
+   the clip is 1.134x as wide as it is tall and he fills its left ~65%. The title sits beside him at fireball height. */
+.hero-copy .fh-clip { --ih: min(var(--fh-h, 340px), 400px); --off: calc((var(--fh-h, 340px) - var(--ih)) / 2); }
+.hero-copy .fh-clip img { top: var(--off); height: var(--ih); }
+.hero-copy .projects-heading-row .fh-title { left: calc(var(--ih) * .74); right: 2%; top: auto; bottom: calc(var(--off) + var(--ih) * .4); height: calc(var(--ih) * .3); justify-content: center; flex-wrap: nowrap;
+  font-size: max(12px, min(calc((100cqw - var(--ih) * .74 - 80px) / 12.5), calc(var(--ih) * .1))); }
 @media (max-width: 700px) {
   .hero-copy .projects-heading-row { margin: 0 -24px -45px; }
   .hero-copy .fire-heading { margin: 0; }
@@ -583,3 +585,34 @@ body.cursor-label .cursor-ring::after { opacity: 1; color: var(--ink); }
 
 /* ---------- Games title: pixel lettering, centred above the two games ---------- */
 .games-title { flex: 0 0 100%; margin: 0 0 clamp(4px, 1vw, 12px); text-align: center; font: 400 clamp(16px, 2.6vw, 34px)/1.4 'Press Start 2P', monospace; text-transform: uppercase; color: var(--paper); text-shadow: .12em .12em 0 var(--coral); -webkit-font-smoothing: none; }
+
+/* ---------- Wavy edge where the projects meet the games ---------- */
+.games-section { position: relative; border-top: 0; }
+.games-section::before { content: ''; position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: 44px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%23012245'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left bottom / 320px 44px repeat-x; }
+@media (max-width: 700px) { .games-section::before { height: 30px; background-size: 220px 30px; } }
+
+/* ---------- Wavy bottom edge on the painting, flowing into the projects (kept off the Sasuke banner) ---------- */
+.hero-art-wrap { border-bottom-left-radius: 0; }
+.hero-art-wrap::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; z-index: 5; height: 44px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%23fcfcfc'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left bottom / 320px 44px repeat-x; }
+@media (max-width: 700px) { .hero-art-wrap::after { height: 30px; background-size: 220px 30px; } }
+
+/* ---------- Collage edges: wavy top on the Sasuke banner, wavy left edge on the painting ---------- */
+.hero-copy .fh-clip { border-top: 0; }
+.hero-copy .projects-heading-row { position: relative; align-items: stretch; }
+.hero-copy .projects-heading-row::before { content: ''; position: absolute; left: 0; right: 0; top: -41px; z-index: 4; height: 44px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='44' viewBox='0 0 320 44'%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22 V44 H0 Z' fill='%23fcfcfc'/%3E%3Cpath d='M0 22 C 40 2, 120 2, 160 22 C 200 42, 280 42, 320 22' fill='none' stroke='%23191526' stroke-width='2.5'/%3E%3C/svg%3E") left top / 320px 44px repeat-x; }
+@media (min-width: 701px) {
+  /* the banner runs on under the painting, so the painting's wavy edge shows white where they meet */
+  .hero-copy .projects-heading-row { margin-right: calc(-1 * clamp(26px, 6vw, 92px) - 40px); }
+  .hero-copy .projects-heading-row .fh-title { right: calc(40px + 2%); }
+  .hero-art-wrap { border-left: 0; border-top-left-radius: 0; }
+  .hero-art-wrap {
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='320' viewBox='0 0 32 320'%3E%3Cpath d='M16 0 C 0 40, 0 120, 16 160 C 32 200, 32 280, 16 320 H32 V0 Z'/%3E%3C/svg%3E") left top / 32px 320px repeat-y, linear-gradient(#000, #000) 32px 0 / calc(100% - 32px) 100% no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='320' viewBox='0 0 32 320'%3E%3Cpath d='M16 0 C 0 40, 0 120, 16 160 C 32 200, 32 280, 16 320 H32 V0 Z'/%3E%3C/svg%3E") left top / 32px 320px repeat-y, linear-gradient(#000, #000) 32px 0 / calc(100% - 32px) 100% no-repeat;
+  }
+  /* inked outline along that wavy edge */
+  .hero-art-wrap::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 32px; z-index: 4; pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='320' viewBox='0 0 32 320'%3E%3Cpath d='M16 0 C 0 40, 0 120, 16 160 C 32 200, 32 280, 16 320' fill='none' stroke='%23191526' stroke-width='5'/%3E%3C/svg%3E") left top / 32px 320px repeat-y; }
+}
